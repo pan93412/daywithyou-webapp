@@ -1,10 +1,10 @@
+import AppLogoIcon from '@/components/app-logo-icon';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
 import { Badge, Menu, Search, ShoppingCart, User } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import AppLogoIcon from '@/components/app-logo-icon';
 
 export default function Home() {
     const { auth } = usePage<SharedData>().props;
@@ -18,7 +18,7 @@ export default function Home() {
 
             <div className="flex min-h-screen flex-col bg-zinc-50">
                 <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
-                    <div className="flex w-full h-16 items-center justify-around">
+                    <div className="flex h-16 w-full items-center justify-around">
                         <div className="flex items-center gap-2">
                             <Sheet>
                                 <SheetTrigger asChild>
@@ -52,14 +52,10 @@ export default function Home() {
                             </Link>
                         </div>
 
-                        <div className="hidden max-w-sm flex-1 mx-4 lg:flex">
+                        <div className="mx-4 hidden max-w-sm flex-1 lg:flex">
                             <div className="relative w-full">
-                                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-zinc-500" />
-                                <Input
-                                    type="search"
-                                    placeholder="搜尋商品..."
-                                    className="w-full bg-zinc-100 pl-8 focus-visible:ring-emerald-500"
-                                />
+                                <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-zinc-500" />
+                                <Input type="search" placeholder="搜尋商品..." className="w-full bg-zinc-100 pl-8 focus-visible:ring-emerald-500" />
                             </div>
                         </div>
 
@@ -81,24 +77,18 @@ export default function Home() {
                             </Button>
                             <Button variant="ghost" size="icon" className="relative" aria-label="Shopping cart">
                                 <ShoppingCart className="h-5 w-5" />
-                                <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-emerald-500 p-0 text-xs text-white">
-                                    3
-                                </Badge>
+                                <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-emerald-500 p-0 text-xs text-white">3</Badge>
                             </Button>
                             <Link href="/dashboard">
-                                {
-                                    auth.user
-                                        ? (
-                                            <Button variant="ghost" size="icon" aria-label="User account">
-                                                <User className="h-5 w-5" />
-                                            </Button>
-                                        )
-                                        : (
-                                            <Button variant="outline" size="default" aria-label="Login">
-                                                登入
-                                            </Button>
-                                        )
-                                }
+                                {auth.user ? (
+                                    <Button variant="ghost" size="icon" aria-label="User account">
+                                        <User className="h-5 w-5" />
+                                    </Button>
+                                ) : (
+                                    <Button variant="outline" size="default" aria-label="Login">
+                                        登入
+                                    </Button>
+                                )}
                             </Link>
                         </div>
                     </div>

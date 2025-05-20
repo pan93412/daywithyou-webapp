@@ -6,12 +6,12 @@ import { Badge, Menu, Search, ShoppingCart, User } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import AppLogoIcon from '@/components/app-logo-icon';
 
-export default function Welcome() {
+export default function Home() {
     const { auth } = usePage<SharedData>().props;
 
     return (
         <>
-            <Head title="Welcome">
+            <Head title="首頁">
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
             </Head>

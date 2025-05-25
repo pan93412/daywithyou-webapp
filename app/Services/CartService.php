@@ -76,10 +76,16 @@ class CartService
      */
     protected function addSessionItem(Product $product, array $data): void
     {
+        $currentCart = Session::get('cart', []);
+        $currentProductInfo = $currentCart[$product->id] ?? ['quantity' => 0];
+
         Session::put(
             'cart', [
-                ...Session::get('cart', []),
-                $product->id => $data,
+                ...$currentCart,
+                $product->id => [
+                    ...$currentProductInfo,
+                    'quantity' => $currentProductInfo['quantity'] + $data['quantity'],
+                ],
             ],
         );
     }
@@ -114,10 +120,18 @@ class CartService
      */
     protected function addRedisItem(Product $product, array $data): void
     {
+        $currentCart = $this->getRedisContents();
+
+        $currentProductInfo = $currentCart[$product->id] ?? ['quantity' => 0];
+        $newProductInfo = [
+            ...$currentProductInfo,
+            'quantity' => $currentProductInfo['quantity'] + $data['quantity'],
+        ];
+
         Redis::hset(
             $this->getCartKey(),
             $product->id,
-            json_encode($data)
+            json_encode($newProductInfo),
         );
 
         // Set expiration time (e.g., 7 days)

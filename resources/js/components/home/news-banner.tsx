@@ -1,5 +1,5 @@
-import React from 'react';
 import { Link } from '@inertiajs/react';
+import React from 'react';
 
 interface NewsItem {
     title: string;
@@ -42,18 +42,15 @@ export const NewsBanner: React.FC<NewsBannerProps> = ({ news }) => {
         <section className="bg-emerald-50 py-3">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-4">
                 <div className="flex items-center">
-                    <span className="mr-3 rounded-md bg-emerald-600 px-2 py-1 text-xs font-bold text-white">
-                        最新消息
-                    </span>
+                    <span className="mr-3 rounded-md bg-emerald-600 px-2 py-1 text-xs font-bold text-white">最新消息</span>
                     <div className="relative overflow-hidden" style={{ height: '24px', width: '500px' }}>
                         {news.map((item, index) => (
                             <div
                                 key={item.slug}
-                                className="absolute left-0 top-0 w-full transition-all duration-500 ease-in-out"
+                                className="absolute top-0 left-0 w-full transition-all duration-500 ease-in-out"
                                 style={{
                                     opacity: index === currentIndex ? 1 : 0,
-                                    transform: `translateY(${index === currentIndex ? '0' :
-                                        (isAnimating && index === prevIndex) ? '-100%' : '100%'})`,
+                                    transform: `translateY(${index === currentIndex ? '0' : isAnimating && index === prevIndex ? '-100%' : '100%'})`,
                                     pointerEvents: index === currentIndex ? 'auto' : 'none',
                                 }}
                             >

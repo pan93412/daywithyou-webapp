@@ -14,7 +14,7 @@ class NewsIndexResource extends JsonResource
         return [
             'title' => $this->title,
             'summary' => mb_strlen($this->content) > 100
-                ? mb_substr($this->content, 0, 50) . '……'
+                ? mb_substr($this->content, 0, 50).'……'
                 : $this->content,
             'slug' => $this->slug,
             'created_at' => $this->created_at,

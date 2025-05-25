@@ -11,9 +11,9 @@ class CommentController extends Controller
 {
     public function index(Product $product)
     {
-        $comments = Comment::where("product_id", $product->id)
+        $comments = Comment::where('product_id', $product->id)
             ->get()
-            ->load("user");
+            ->load('user');
 
         return CommentResource::collection($comments);
     }
@@ -22,15 +22,15 @@ class CommentController extends Controller
     {
         $user = $request->user();
         $input = $request->validate([
-            "content" => ["required", "string", "min:5", "max:512"],
-            "star" => ["required", "numeric", "min:1", "max:5"]
+            'content' => ['required', 'string', 'min:5', 'max:512'],
+            'star' => ['required', 'numeric', 'min:1', 'max:5'],
         ]);
 
         $comment = Comment::create([
-            "content" => $input['content'],
-            "star" => (int) $input['star'],
-            "product_id" => $product->id,
-            "user_id" => $user->id
+            'content' => $input['content'],
+            'star' => (int) $input['star'],
+            'product_id' => $product->id,
+            'user_id' => $user->id,
         ]);
 
         return response()->json(

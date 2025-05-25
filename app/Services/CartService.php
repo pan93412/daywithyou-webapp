@@ -20,8 +20,8 @@ class CartService
     /**
      * Create a new cart service instance.
      *
-     * @param string|null $driver The storage driver to use (session, redis)
-     * @param string|null $userIdentifier The user identifier (session id or user id)
+     * @param  string|null  $driver  The storage driver to use (session, redis)
+     * @param  string|null  $userIdentifier  The user identifier (session id or user id)
      */
     public function __construct(?string $driver = null, ?string $userIdentifier = null)
     {
@@ -31,8 +31,6 @@ class CartService
 
     /**
      * Get the cart contents.
-     *
-     * @return array
      */
     public function getContents(): array
     {
@@ -43,10 +41,6 @@ class CartService
 
     /**
      * Add an item to the cart.
-     *
-     * @param Product $product
-     * @param array $data
-     * @return void
      */
     public function addItem(Product $product, array $data): void
     {
@@ -59,8 +53,6 @@ class CartService
 
     /**
      * Clear the cart.
-     *
-     * @return void
      */
     public function clear(): void
     {
@@ -73,8 +65,6 @@ class CartService
 
     /**
      * Get the cart contents from session.
-     *
-     * @return array
      */
     protected function getSessionContents(): array
     {
@@ -83,10 +73,6 @@ class CartService
 
     /**
      * Add an item to the session cart.
-     *
-     * @param Product $product
-     * @param array $data
-     * @return void
      */
     protected function addSessionItem(Product $product, array $data): void
     {
@@ -100,8 +86,6 @@ class CartService
 
     /**
      * Clear the session cart.
-     *
-     * @return void
      */
     protected function clearSession(): void
     {
@@ -110,8 +94,6 @@ class CartService
 
     /**
      * Get the cart contents from Redis.
-     *
-     * @return array
      */
     protected function getRedisContents(): array
     {
@@ -129,10 +111,6 @@ class CartService
 
     /**
      * Add an item to the Redis cart.
-     *
-     * @param Product $product
-     * @param array $data
-     * @return void
      */
     protected function addRedisItem(Product $product, array $data): void
     {
@@ -148,8 +126,6 @@ class CartService
 
     /**
      * Clear the Redis cart.
-     *
-     * @return void
      */
     protected function clearRedis(): void
     {
@@ -158,26 +134,22 @@ class CartService
 
     /**
      * Get the cart key for Redis.
-     *
-     * @return string
      */
     protected function getCartKey(): string
     {
-        return $this->prefix . $this->userIdentifier;
+        return $this->prefix.$this->userIdentifier;
     }
 
     /**
      * Resolve the user identifier.
-     *
-     * @return string
      */
     protected function resolveUserIdentifier(): string
     {
         // Use user ID if authenticated, otherwise use session ID
         if (auth()->check()) {
-            return 'user:' . auth()->id();
+            return 'user:'.auth()->id();
         }
 
-        return 'guest:' . session()->getId();
+        return 'guest:'.session()->getId();
     }
 }

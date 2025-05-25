@@ -43,7 +43,7 @@ class InertiaHomeController extends Controller
 
         return Inertia::render('home', [
             'hotProductsData' => $hotProductsData,
-            'newsItems' => Inertia::defer(fn() => News::limit(5)
+            'newsItems' => Inertia::defer(fn () => News::limit(5)
                 ->orderBy('id', 'desc')
                 ->select(['slug', 'title'])
                 ->get()

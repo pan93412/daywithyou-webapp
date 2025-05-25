@@ -1,20 +1,17 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import React from 'react';
 import { useForm } from '@inertiajs/react';
+import React from 'react';
 
 export interface NewsletterProps {
     title?: string;
     description?: string;
 }
 
-export function Newsletter({
-    title = '訂閱電子報',
-    description = '訂閱我們的電子報，獲取最新產品資訊和獨家優惠'
-}: NewsletterProps) {
+export function Newsletter({ title = '訂閱電子報', description = '訂閱我們的電子報，獲取最新產品資訊和獨家優惠' }: NewsletterProps) {
     const { data, setData, post, processing, errors, reset, wasSuccessful } = useForm({
         email: '',
-    })
+    });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -50,17 +47,11 @@ export function Newsletter({
                             </Button>
                         </div>
 
-                        {wasSuccessful && (
-                            <p className="mt-2 text-sm text-emerald-600">感謝您的訂閱！我們將會寄送最新資訊給您。</p>
-                        )}
+                        {wasSuccessful && <p className="mt-2 text-sm text-emerald-600">感謝您的訂閱！我們將會寄送最新資訊給您。</p>}
 
-                        {errors.email && (
-                            <p className="mt-2 text-sm text-red-600">{errors.email}</p>
-                        )}
+                        {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
 
-                        <p className="mt-4 text-center text-xs text-zinc-500">
-                            訂閱即表示您同意接收我們的電子報。您可以隨時取消訂閱。
-                        </p>
+                        <p className="mt-4 text-center text-xs text-zinc-500">訂閱即表示您同意接收我們的電子報。您可以隨時取消訂閱。</p>
                     </form>
                 </div>
             </div>

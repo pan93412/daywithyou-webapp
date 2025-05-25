@@ -1,15 +1,12 @@
-import { AppHeader } from '@/components/app-header';
-import { AppContent } from '@/components/app-content';
 import { Data, ProductIndex } from '@/types/resource';
-import { AppFooter } from '@/components/app-footer';
 
 // Import the new components
 import { HotProductsSection } from '@/components/home/hot-products-section';
 import { NewsBanner } from '@/components/home/news-banner';
-import { Testimonials } from '@/components/home/testimonials';
 import { Newsletter } from '@/components/home/newsletter';
-import { Deferred } from '@inertiajs/react';
+import { Testimonials } from '@/components/home/testimonials';
 import AppMainLayout from '@/layouts/app/app-main-layout';
+import { Deferred } from '@inertiajs/react';
 
 interface Props {
     hotProductsData: Data<ProductIndex[]>;
@@ -26,11 +23,7 @@ interface Props {
     }[];
 }
 
-export default function Home({
-    hotProductsData,
-    newsItems,
-    testimonials
-}: Props) {
+export default function Home({ hotProductsData, newsItems, testimonials }: Props) {
     return (
         <AppMainLayout title="首頁">
             {/* News Banner */}

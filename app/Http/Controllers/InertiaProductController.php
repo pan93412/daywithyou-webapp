@@ -26,7 +26,7 @@ class InertiaProductController extends Controller
 
         return Inertia::render('products/index', [
             'reply' => $data,
-            'query' => $query
+            'query' => $query,
         ]);
     }
 
@@ -40,10 +40,11 @@ class InertiaProductController extends Controller
         ]);
     }
 
-    public function addToCert(Product $product) {
+    public function addToCert(Product $product)
+    {
         // write current product to session
         session([
-            'cert' => [...session('cert', []), $product->id]
+            'cert' => [...session('cert', []), $product->id],
         ]);
     }
 
@@ -58,15 +59,15 @@ class InertiaProductController extends Controller
     {
         $user = $request->user();
         $input = $request->validate([
-            "content" => ["required", "string", "min:5", "max:512"],
-            "star" => ["required", "numeric", "min:1", "max:5"]
+            'content' => ['required', 'string', 'min:5', 'max:512'],
+            'star' => ['required', 'numeric', 'min:1', 'max:5'],
         ]);
 
         Comment::create([
-            "content" => $input['content'],
-            "star" => (int) $input['star'],
-            "product_id" => $product->id,
-            "user_id" => $user->id
+            'content' => $input['content'],
+            'star' => (int) $input['star'],
+            'product_id' => $product->id,
+            'user_id' => $user->id,
         ]);
 
         return to_route('products.show', ['product' => $product->id]);

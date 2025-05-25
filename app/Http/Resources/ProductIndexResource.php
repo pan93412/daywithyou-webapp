@@ -16,7 +16,7 @@ class ProductIndexResource extends JsonResource
             'name' => $this->name,
             // description 的 index 限制最多 50 個字
             'description' => mb_strlen($this->description) > 100
-                ? mb_substr($this->description, 0, 50) . '……'
+                ? mb_substr($this->description, 0, 50).'……'
                 : $this->description,
             'price' => $this->price,
             'image' => $this->image,

@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Services\CartService;
-use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
@@ -21,9 +20,7 @@ class HandleInertiaRequests extends Middleware
 
     public function __construct(
         private readonly CartService $cartService
-    )
-    {
-    }
+    ) {}
 
     /**
      * Determines the current asset version.

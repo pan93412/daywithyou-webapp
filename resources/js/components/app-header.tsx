@@ -1,11 +1,11 @@
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { Badge, Menu, Search, ShoppingCart, User } from 'lucide-react';
-import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLogoIcon from '@/components/app-logo-icon';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import type { SharedData } from '@/types';
-import { useRef, useState, useEffect } from 'react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Badge, Menu, Search, ShoppingCart, User } from 'lucide-react';
+import { useRef } from 'react';
 import { toast } from 'sonner';
 
 const navbarItems = [
@@ -32,7 +32,9 @@ export interface AppHeaderProps {
 }
 
 export function AppHeader({ title }: AppHeaderProps) {
-    const { props: { auth, cart } } = usePage<SharedData>();
+    const {
+        props: { auth, cart },
+    } = usePage<SharedData>();
     const formRef = useRef<HTMLFormElement | null>(null);
 
     const cartCount = Object.keys(cart).length;
@@ -40,10 +42,10 @@ export function AppHeader({ title }: AppHeaderProps) {
     const handleClearCarts = () => {
         router.post(route('inertia-product-cart.clear'), undefined, {
             onSuccess: () => {
-              toast.info('已清空購物車');
+                toast.info('已清空購物車');
             },
         });
-    }
+    };
 
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">

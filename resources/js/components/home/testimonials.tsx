@@ -21,11 +21,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ testimonials }) => {
                     {testimonials.map((testimonial) => (
                         <div key={testimonial.id} className="rounded-lg bg-white p-6 shadow-md">
                             <div className="mb-4 flex items-center">
-                                <img
-                                    src={testimonial.avatar}
-                                    alt={testimonial.name}
-                                    className="mr-3 h-12 w-12 rounded-full object-cover"
-                                />
+                                <img src={testimonial.avatar} alt={testimonial.name} className="mr-3 h-12 w-12 rounded-full object-cover" />
                                 <div>
                                     <h3 className="font-semibold">{testimonial.name}</h3>
                                     <div className="flex text-amber-400">

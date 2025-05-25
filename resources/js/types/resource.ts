@@ -22,7 +22,7 @@ export interface PaginatedData<T> extends Data<T> {
         per_page: number;
         to: number;
         total: number;
-    }
+    };
 }
 
 export interface ProductIndex {

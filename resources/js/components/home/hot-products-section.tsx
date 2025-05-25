@@ -1,6 +1,6 @@
-import React from 'react';
 import ProductCard from '@/components/product-card';
 import { Data, ProductIndex } from '@/types/resource';
+import React from 'react';
 
 interface HotProductsSectionProps {
     hotProductsData: Data<ProductIndex[]>;

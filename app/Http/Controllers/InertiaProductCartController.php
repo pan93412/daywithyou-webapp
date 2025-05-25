@@ -22,7 +22,7 @@ class InertiaProductCartController extends Controller
     public function store(Product $product)
     {
         $input = request()->validate([
-            'quantity' => ['required', 'numeric', 'min:1', 'max:100']
+            'quantity' => ['required', 'numeric', 'min:1', 'max:100'],
         ]);
 
         $this->cartService->addItem($product, $input);

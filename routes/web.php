@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\InertiaHomeController;
 use App\Http\Controllers\InertiaNewsController;
-use App\Http\Controllers\InertiaProductController;
 use App\Http\Controllers\InertiaProductCartController;
+use App\Http\Controllers\InertiaProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 

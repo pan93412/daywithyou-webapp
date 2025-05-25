@@ -46,6 +46,7 @@ export default function ProductDetails({ productData }: Props) {
                         </div>
                     </div>
                 </div>
+
                 {/* Mock Comment & Rate Area */}
                 <section className="mt-10 px-2">
                     <h2 className="text-lg font-semibold mb-3">商品評價</h2>

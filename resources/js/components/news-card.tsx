@@ -19,7 +19,7 @@ const NewsCard: React.FC<NewsCardProps> = ({ title, summary, slug, created_at })
                 <p className="mb-4 line-clamp-3 text-sm text-zinc-500">{summary}</p>
             </div>
             <div className="mt-auto">
-                <Link href={route('inertia-news.show', { slug })}>
+                <Link href={route('news.show', { slug })}>
                     <Button variant="outline" className="w-full">
                         閱讀更多
                     </Button>

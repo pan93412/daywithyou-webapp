@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ProductIndexResource;
 use App\Models\Product;
 use App\Services\CartService;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -18,18 +19,36 @@ class CartController extends Controller
     public function index()
     {
         $rawCarts = $this->cartService->list();
-        $cartsReply = [];
+        $carts = [];
 
         foreach ($rawCarts as $productId => $cartState) {
             $product = Product::find($productId);
 
-            $cartsReply[] = ProductIndexResource::make($product)->additional([
+            $carts[] = ProductIndexResource::make($product)->additional([
                 'quantity' => $cartState->quantity
             ]);
         }
 
         return inertia('cart/index', [
-            'carts' => $cartsReply
+            'carts' => $carts
+        ]);
+    }
+
+    public function checkout()
+    {
+        $rawCarts = $this->cartService->list();
+        $carts = [];
+
+        foreach ($rawCarts as $productId => $cartState) {
+            $product = Product::find($productId);
+
+            $carts[] = ProductIndexResource::make($product)->additional([
+                'quantity' => $cartState->quantity
+            ]);
+        }
+
+        return inertia('cart/checkout', [
+            'carts' => $carts
         ]);
     }
 

@@ -1,10 +1,11 @@
 import { ProductIndex } from '@/types/resource';
 import { Button } from '@/components/ui/button';
 import AppMainLayout from '@/layouts/app/app-main-layout';
-import { Link, router } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { Trash2, Minus, Plus, ShoppingBag } from 'lucide-react';
 import { useCallback } from 'react';
 import { toast } from 'sonner';
+import { SharedData } from '@/types';
 
 interface CartItem {
     data: ProductIndex;
@@ -16,7 +17,7 @@ interface Props {
 }
 
 export default function CartPage({ carts }: Props) {
-    const totalPrice = carts.reduce((sum, { data: product, quantity }) => sum + product.price * quantity, 0);
+    const totalPrice = carts.reduce((sum, { data: product, quantity }) => sum + Number(product.price) * quantity, 0);
 
     return (
         <AppMainLayout title="購物車">
@@ -152,6 +153,8 @@ function CartRemove({ product }: { product: string }) {
 }
 
 function OrderSummary({ totalPrice, itemCount }: { totalPrice: number; itemCount: number }) {
+    const { auth } = usePage<SharedData>().props;
+
     return (
         <div className="rounded-xl bg-white p-6 shadow-md">
             <h2 className="mb-4 text-lg font-semibold">訂單摘要</h2>
@@ -173,7 +176,11 @@ function OrderSummary({ totalPrice, itemCount }: { totalPrice: number; itemCount
                 </div>
             </div>
 
-            <Button className="mt-6 w-full">前往結帳</Button>
+            <Link href={route('carts.checkout')}>
+                <Button className="mt-6 w-full">
+                    {auth.user ? '前往結帳' : '登入後前往結帳'}
+                </Button>
+            </Link>
         </div>
     );
 }

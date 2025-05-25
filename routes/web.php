@@ -23,6 +23,7 @@ Route::prefix('/news')->name('news.')->group(function () {
 
 Route::prefix('/carts')->name('carts.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout')->middleware(['auth', 'verified']);
     Route::post('/{product:slug}/increment', [CartController::class, 'increment'])->name('increment');
     Route::delete('/{product:slug}', [CartController::class, 'remove'])->name('remove');
     Route::post('/clear', [CartController::class, 'clear'])->name('clear');

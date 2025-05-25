@@ -7,8 +7,8 @@ use App\Http\Controllers\InertiaProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', [InertiaHomeController::class, 'index'])->name('inertia-home');
-Route::post('/newsletter/subscribe', [InertiaHomeController::class, 'subscribe'])->name('inertia-home.subscribe');
+Route::get('/', [InertiaHomeController::class, 'index'])->name('home');
+Route::post('/newsletter/subscribe', [InertiaHomeController::class, 'subscribe'])->name('home.subscribe');
 Route::get('/products', [InertiaProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product}', [InertiaProductController::class, 'show'])->name('products.show');
 Route::post('/products/{product}/new-comment', [InertiaProductController::class, 'store'])->name('products.comment.store');

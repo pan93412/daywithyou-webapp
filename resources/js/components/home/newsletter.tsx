@@ -16,7 +16,7 @@ export function Newsletter({ title = '訂閱電子報', description = '訂閱我
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        post(route('inertia-home.subscribe'), {
+        post(route('home.subscribe'), {
             preserveScroll: true,
         });
         reset();

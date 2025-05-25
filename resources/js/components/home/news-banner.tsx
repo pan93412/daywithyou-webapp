@@ -36,8 +36,6 @@ export const NewsBanner: React.FC<NewsBannerProps> = ({ news }) => {
         return () => clearInterval(interval);
     }, [currentIndex, news.length]);
 
-    if (news.length === 0) return null;
-
     return (
         <section className="bg-emerald-50 py-3">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-4">

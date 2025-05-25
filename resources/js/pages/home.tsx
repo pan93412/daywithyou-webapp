@@ -27,7 +27,7 @@ export default function Home({ hotProductsData, newsItems, testimonials }: Props
     return (
         <AppMainLayout title="首頁">
             {/* News Banner */}
-            <Deferred fallback={<></>} data="newsItems">
+            <Deferred fallback={<NewsBanner news={[]} />} data="newsItems">
                 <NewsBanner news={newsItems ?? []} />
             </Deferred>
 

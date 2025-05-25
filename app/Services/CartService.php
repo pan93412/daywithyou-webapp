@@ -14,11 +14,11 @@ class CartService
     /**
      * Create a new cart service instance.
      *
-     * @param  string|null  $driver  The storage driver to use (redis)
+     * @param  string|null  $driver  The storage driver to use (storage, redis)
      */
     public function __construct(?string $driver = null)
     {
-        $this->driver = $driver ?? config('cart.driver', 'redis');
+        $this->driver = $driver ?? config('cart.driver', 'storage');
     }
 
     public function storage(): CartStateStorage
@@ -27,6 +27,7 @@ class CartService
 
         return match ($this->driver) {
             'redis' => new RedisCartStateStorage($this->getUserIdentifier(), $expiration),
+            'storage' => new SessionCartStateStorage(),
             default => throw new \InvalidArgumentException('Invalid cart storage driver: '.$this->driver),
         };
     }

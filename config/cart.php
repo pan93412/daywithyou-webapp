@@ -10,7 +10,7 @@ return [
     | for storing cart items. Supported drivers: "redis".
     |
     */
-    'driver' => env('CART_DRIVER', 'redis'),
+    'driver' => env('CART_DRIVER', 'storage'),
 
     /*
     |--------------------------------------------------------------------------

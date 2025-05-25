@@ -38,10 +38,10 @@ export const NewsBanner: React.FC<NewsBannerProps> = ({ news }) => {
 
     return (
         <section className="bg-emerald-50 py-3">
-            <div className="mx-auto flex max-w-6xl items-center justify-between px-4">
-                <div className="flex items-center">
-                    <span className="mr-3 rounded-md bg-emerald-600 px-2 py-1 text-xs font-bold text-white">最新消息</span>
-                    <div className="relative overflow-hidden" style={{ height: '24px', width: '500px' }}>
+            <div className="mx-auto flex flex-col md:flex-row max-w-6xl items-center justify-between px-4">
+                <div className="flex items-center w-full">
+                    <span className="whitespace-nowrap mr-3 rounded-md bg-emerald-600 px-2 py-1 text-xs font-bold text-white">最新消息</span>
+                    <div className="relative overflow-hidden w-full h-6">
                         {news.map((item, index) => (
                             <div
                                 key={item.slug}
@@ -59,7 +59,7 @@ export const NewsBanner: React.FC<NewsBannerProps> = ({ news }) => {
                         ))}
                     </div>
                 </div>
-                <Link href={route('inertia-news.index')} className="text-sm text-emerald-600 hover:underline">
+                <Link href={route('inertia-news.index')} className="whitespace-nowrap text-sm text-emerald-600 hover:underline">
                     查看全部
                 </Link>
             </div>

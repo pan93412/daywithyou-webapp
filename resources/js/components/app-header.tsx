@@ -39,14 +39,6 @@ export function AppHeader({ title }: AppHeaderProps) {
 
     const cartCount = Object.keys(cart).length;
 
-    const handleClearCarts = () => {
-        router.post(route('carts.clear'), undefined, {
-            onSuccess: () => {
-                toast.info('已清空購物車');
-            },
-        });
-    };
-
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
             <Head title={title}>
@@ -107,13 +99,15 @@ export function AppHeader({ title }: AppHeaderProps) {
                     <Button variant="ghost" size="icon" className="relative lg:hidden" aria-label="Search">
                         <Search className="h-5 w-5" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="relative" aria-label="Shopping cart" onClick={handleClearCarts}>
-                        <ShoppingCart className="h-5 w-5" />
-                        {cartCount > 0 && (
-                            <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-emerald-500 p-0 text-xs text-white">{cartCount}</Badge>
-                        )}
-                    </Button>
-                    <Link href="/dashboard">
+                    <Link href={route('carts.index')}>
+                        <Button variant="ghost" size="icon" className="relative" aria-label="Shopping cart">
+                            <ShoppingCart className="h-5 w-5" />
+                            {cartCount > 0 && (
+                                <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-emerald-500 p-0 text-xs text-white">{cartCount}</Badge>
+                            )}
+                        </Button>
+                    </Link>
+                    <Link href={route('dashboard')}>
                         {auth.user ? (
                             <Button variant="ghost" size="icon" aria-label="User account">
                                 <User className="h-5 w-5" />

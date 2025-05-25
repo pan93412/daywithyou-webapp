@@ -24,7 +24,7 @@ Route::prefix('/news')->name('news.')->group(function () {
 Route::prefix('/carts')->name('carts.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');
     Route::post('/{product:slug}/increment', [CartController::class, 'increment'])->name('increment');
-    Route::post('/{product:slug}/remove', [CartController::class, 'remove'])->name('remove');
+    Route::delete('/{product:slug}', [CartController::class, 'remove'])->name('remove');
     Route::post('/clear', [CartController::class, 'clear'])->name('clear');
 });
 

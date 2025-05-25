@@ -1,8 +1,7 @@
 import { Data, News } from '@/types/resource';
-import { AppContent } from '@/components/app-content';
-import { AppHeader } from '@/components/app-header';
 import { ArrowLeft } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
+import AppMainLayout from '@/layouts/app/app-main-layout';
 
 interface Props {
     newsData: Data<News>
@@ -12,8 +11,7 @@ export default function NewsDetails({ newsData }: Props) {
     const { title, content, created_at, updated_at } = newsData.data;
 
     return (
-        <AppContent>
-            <AppHeader title="最新消息" />
+        <AppMainLayout title={title}>
             <main className="flex-1 w-full max-w-4xl mx-auto py-8 px-4">
                 {/* Back to News List Button */}
                 <button
@@ -65,6 +63,6 @@ export default function NewsDetails({ newsData }: Props) {
                     </div>
                 </div>
             </main>
-        </AppContent>
+        </AppMainLayout>
     );
 }

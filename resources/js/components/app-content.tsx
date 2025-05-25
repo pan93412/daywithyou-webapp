@@ -12,9 +12,9 @@ export function AppContent({ variant = 'header', children, ...props }: AppConten
     }
 
     return (
-        <main className="flex min-h-screen flex-col bg-zinc-50">
+        <div className="flex min-h-screen flex-col bg-zinc-50">
             {children}
             <Toaster />
-        </main>
+        </div>
     );
 }

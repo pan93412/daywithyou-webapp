@@ -9,6 +9,7 @@ import { NewsBanner } from '@/components/home/news-banner';
 import { Testimonials } from '@/components/home/testimonials';
 import { Newsletter } from '@/components/home/newsletter';
 import { Deferred } from '@inertiajs/react';
+import AppMainLayout from '@/layouts/app/app-main-layout';
 
 interface Props {
     hotProductsData: Data<ProductIndex[]>;
@@ -31,29 +32,22 @@ export default function Home({
     testimonials
 }: Props) {
     return (
-        <>
-            <AppContent>
-                <AppHeader title="首頁" />
+        <AppMainLayout title="首頁">
+            {/* News Banner */}
+            <Deferred fallback={<></>} data="newsItems">
+                <NewsBanner news={newsItems ?? []} />
+            </Deferred>
 
-                {/* News Banner */}
-                <Deferred fallback={<></>} data="newsItems">
-                    <NewsBanner news={newsItems ?? []} />
-                </Deferred>
+            <main className="flex-1">
+                {/* Hot Products Section */}
+                <HotProductsSection hotProductsData={hotProductsData} />
 
-                <main className="flex-1">
-                    {/* Hot Products Section */}
-                    <HotProductsSection hotProductsData={hotProductsData} />
+                {/* Testimonials */}
+                <Testimonials testimonials={testimonials} />
 
-                    {/* Testimonials */}
-                    <Testimonials testimonials={testimonials} />
-
-                    {/* Newsletter Subscription */}
-                    <Newsletter />
-                </main>
-            </AppContent>
-
-            {/* Footer */}
-            <AppFooter />
-        </>
+                {/* Newsletter Subscription */}
+                <Newsletter />
+            </main>
+        </AppMainLayout>
     );
 }

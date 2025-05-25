@@ -9,6 +9,8 @@ import { Deferred, router } from '@inertiajs/react';
 import { AppContent } from '@/components/app-content';
 import { toast, useSonner } from 'sonner';
 import { useState, useEffect } from 'react';
+import { AppShell } from '@/components/app-shell';
+import AppMainLayout from '@/layouts/app/app-main-layout';
 
 interface Props {
     productData: Data<Product>,
@@ -36,8 +38,7 @@ export default function ProductDetails({ productData, commentsData }: Props) {
     };
 
     return (
-        <AppContent>
-            <AppHeader title={name} />
+        <AppMainLayout title={name}>
             <main className="flex-1 w-full max-w-4xl mx-auto py-8 px-4">
                 {/* Back to Product List Button */}
                 <button
@@ -81,6 +82,6 @@ export default function ProductDetails({ productData, commentsData }: Props) {
                     </Deferred>
                 </section>
             </main>
-        </AppContent>
+        </AppMainLayout>
     );
 }

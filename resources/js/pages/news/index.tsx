@@ -2,8 +2,7 @@ import { NewsIndex, PaginatedData } from '@/types/resource';
 import { Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import NewsCard from '@/components/news-card';
-import { AppContent } from '@/components/app-content';
-import { AppHeader } from '@/components/app-header';
+import AppMainLayout from '@/layouts/app/app-main-layout';
 
 interface Props {
     paginatedNewsData: PaginatedData<NewsIndex[]>;
@@ -11,9 +10,7 @@ interface Props {
 
 export default function NewsList({ paginatedNewsData }: Props) {
     return (
-        <AppContent>
-            <AppHeader title="最新消息" />
-
+        <AppMainLayout title="最新消息與活動">
             <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
                 <h2 className="mb-8 text-center text-2xl font-bold">最新消息與活動</h2>
 
@@ -64,6 +61,6 @@ export default function NewsList({ paginatedNewsData }: Props) {
                     顯示 {paginatedNewsData.meta.from} 至 {paginatedNewsData.meta.to} 筆，共 {paginatedNewsData.meta.total} 筆消息
                 </div>
             </main>
-        </AppContent>
+        </AppMainLayout>
     );
 }

@@ -4,6 +4,7 @@ import { AppContent } from '@/components/app-content';
 import ProductCard from '@/components/product-card';
 import { Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
+import AppMainLayout from '@/layouts/app/app-main-layout';
 
 interface Props {
     query?: string;
@@ -14,9 +15,7 @@ export default function ProductsList({query, reply}: Props) {
     const title = query ? `「${query}」的搜尋結果` : "商品列表";
 
     return (
-        <AppContent>
-            <AppHeader title={title} />
-
+        <AppMainLayout title={title}>
             <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
                 <h2 className="mb-8 text-center text-2xl font-bold">{title}</h2>
 
@@ -69,6 +68,6 @@ export default function ProductsList({query, reply}: Props) {
                     顯示 {reply.meta.from} 至 {reply.meta.to} 筆，共 {reply.meta.total} 筆商品
                 </div>
             </main>
-        </AppContent>
+        </AppMainLayout>
     );
 }

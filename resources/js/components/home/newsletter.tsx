@@ -19,7 +19,7 @@ export function Newsletter({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        post(route('home-inertia.subscribe'), {
+        post(route('inertia-home.subscribe'), {
             preserveScroll: true,
         });
         reset();

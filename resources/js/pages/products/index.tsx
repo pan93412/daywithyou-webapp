@@ -6,20 +6,23 @@ import { Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 
 interface Props {
-    paginatedProductsData: PaginatedData<ProductIndex[]>
+    query?: string;
+    reply: PaginatedData<ProductIndex[]>
 }
 
-export default function ProductsList({paginatedProductsData}: Props) {
+export default function ProductsList({query, reply}: Props) {
+    const title = query ? `「${query}」的搜尋結果` : "商品列表";
+
     return (
         <AppContent>
-            <AppHeader title="商品列表" />
+            <AppHeader title={title} />
 
             <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
-                <h2 className="mb-8 text-center text-2xl font-bold">所有商品</h2>
+                <h2 className="mb-8 text-center text-2xl font-bold">{title}</h2>
 
                 {/* Products Grid */}
                 <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 mb-8">
-                    {paginatedProductsData.data.map((product) => (
+                    {reply.data.map((product) => (
                         <ProductCard
                             key={product.id}
                             image={product.image}
@@ -33,9 +36,9 @@ export default function ProductsList({paginatedProductsData}: Props) {
                 </div>
 
                 {/* Pagination Controls */}
-                {paginatedProductsData.meta.last_page > 1 && (
+                {reply.meta.last_page > 1 && (
                     <div className="flex justify-center items-center gap-2 mt-8">
-                        {paginatedProductsData.meta.links.map((link, index) => (
+                        {reply.meta.links.map((link, index) => (
                             link.url ? (
                                 <Link
                                     key={index}
@@ -63,7 +66,7 @@ export default function ProductsList({paginatedProductsData}: Props) {
                 )}
 
                 <div className="text-center text-sm text-gray-500 mt-4">
-                    顯示 {paginatedProductsData.meta.from} 至 {paginatedProductsData.meta.to} 筆，共 {paginatedProductsData.meta.total} 筆商品
+                    顯示 {reply.meta.from} 至 {reply.meta.to} 筆，共 {reply.meta.total} 筆商品
                 </div>
             </main>
         </AppContent>

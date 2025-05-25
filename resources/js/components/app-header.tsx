@@ -1,15 +1,16 @@
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Badge, Menu, Search, ShoppingCart, User } from 'lucide-react';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, usePage, router } from '@inertiajs/react';
 import AppLogoIcon from '@/components/app-logo-icon';
 import { Input } from '@/components/ui/input';
 import type { SharedData } from '@/types';
+import { useEffect, useRef, useState } from 'react';
 
 const navbarItems = [
     {
         name: '商品列表',
-        href: '/products',
+        href: route('products.index'),
     },
     {
         name: '新品上市',
@@ -17,7 +18,7 @@ const navbarItems = [
     },
     {
         name: '最新消息',
-        href: '/news',
+        href: route('inertia-news.index'),
     },
     {
         name: '關於我們',
@@ -30,7 +31,8 @@ export interface AppHeaderProps {
 }
 
 export function AppHeader({ title }: AppHeaderProps) {
-    const { auth } = usePage<SharedData>().props;
+    const { props: { auth } } = usePage<SharedData>();
+    const formRef = useRef<HTMLFormElement | null>(null);
 
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
@@ -68,8 +70,15 @@ export function AppHeader({ title }: AppHeaderProps) {
 
                 <div className="mx-4 hidden max-w-sm flex-1 lg:flex">
                     <div className="relative w-full">
-                        <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-zinc-500" />
-                        <Input type="search" placeholder="搜尋商品..." className="w-full bg-zinc-100 pl-8 focus-visible:ring-emerald-500" />
+                        <form ref={formRef} action="/products" method="get">
+                            <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-zinc-500" />
+                            <Input
+                                type="search"
+                                name="q"
+                                placeholder="搜尋商品……"
+                                className="w-full bg-zinc-100 pl-8 focus-visible:ring-emerald-500"
+                            />
+                        </form>
                     </div>
                 </div>
 

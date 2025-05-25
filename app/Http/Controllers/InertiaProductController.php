@@ -13,14 +13,21 @@ use Inertia\Inertia;
 
 class InertiaProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $paginatedProductsData = ProductIndexResource::collection(
-            Product::paginate(6)
-        );
+        $query = $request->input('q');
+
+        if ($query) {
+            $products = Product::where('name', 'like', "%$query%")->paginate(6);
+        } else {
+            $products = Product::paginate(6);
+        }
+
+        $data = ProductResource::collection($products);
 
         return Inertia::render('products/index', [
-            'paginatedProductsData' => $paginatedProductsData
+            'reply' => $data,
+            'query' => $query
         ]);
     }
 

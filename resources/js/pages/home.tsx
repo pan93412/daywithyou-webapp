@@ -8,13 +8,13 @@ import { HotProductsSection } from '@/components/home/hot-products-section';
 import { NewsBanner } from '@/components/home/news-banner';
 import { Testimonials } from '@/components/home/testimonials';
 import { Newsletter } from '@/components/home/newsletter';
+import { Deferred } from '@inertiajs/react';
 
 interface Props {
     hotProductsData: Data<ProductIndex[]>;
-    newsItems: {
-        id: number;
+    newsItems?: {
         title: string;
-        url: string;
+        slug: string;
     }[];
     testimonials: {
         id: number;
@@ -36,7 +36,9 @@ export default function Home({
                 <AppHeader title="首頁" />
 
                 {/* News Banner */}
-                <NewsBanner news={newsItems} />
+                <Deferred fallback={<NewsBanner news={[]} />} data="newsItems">
+                    <NewsBanner news={newsItems ?? []} />
+                </Deferred>
 
                 <main className="flex-1">
                     {/* Hot Products Section */}

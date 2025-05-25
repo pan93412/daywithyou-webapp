@@ -55,3 +55,10 @@ export interface Comment {
     star: number;
     user: User;
 }
+
+export interface NewsIndex {
+    title: string;
+    summary: string;
+    slug: string;
+    created_at: Date;
+}

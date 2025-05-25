@@ -2,9 +2,8 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 
 interface NewsItem {
-    id: number;
     title: string;
-    url: string;
+    slug: string;
 }
 
 interface NewsBannerProps {
@@ -18,16 +17,16 @@ export const NewsBanner: React.FC<NewsBannerProps> = ({ news }) => {
 
     React.useEffect(() => {
         if (news.length <= 1) return;
-        
+
         const interval = setInterval(() => {
             setPrevIndex(currentIndex);
             setIsAnimating(true);
-            
+
             // Wait for animation to start before changing the index
             setTimeout(() => {
                 setCurrentIndex((prevIndex) => (prevIndex + 1) % news.length);
             }, 50);
-            
+
             // Reset animation state after transition completes
             setTimeout(() => {
                 setIsAnimating(false);
@@ -49,16 +48,16 @@ export const NewsBanner: React.FC<NewsBannerProps> = ({ news }) => {
                     <div className="relative overflow-hidden" style={{ height: '24px', width: '500px' }}>
                         {news.map((item, index) => (
                             <div
-                                key={item.id}
+                                key={item.slug}
                                 className="absolute left-0 top-0 w-full transition-all duration-500 ease-in-out"
                                 style={{
                                     opacity: index === currentIndex ? 1 : 0,
-                                    transform: `translateY(${index === currentIndex ? '0' : 
+                                    transform: `translateY(${index === currentIndex ? '0' :
                                         (isAnimating && index === prevIndex) ? '-100%' : '100%'})`,
                                     pointerEvents: index === currentIndex ? 'auto' : 'none',
                                 }}
                             >
-                                <Link href={item.url} className="block truncate hover:text-emerald-600">
+                                <Link href={`/news/${item.slug}`} className="block truncate hover:text-emerald-600">
                                     {item.title}
                                 </Link>
                             </div>

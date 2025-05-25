@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ProductIndexResource;
+use App\Models\News;
 use App\Models\Product;
 use App\Models\Subscriber;
 use Illuminate\Http\Request;
@@ -15,25 +16,6 @@ class InertiaHomeController extends Controller
         $hotProductsData = ProductIndexResource::collection(
             Product::limit(3)->get()
         );
-
-        // Sample data for the new components
-        $newsItems = [
-            [
-                'id' => 1,
-                'title' => '新品上市：限量版手工藝品現已推出',
-                'url' => '/news/1',
-            ],
-            [
-                'id' => 2,
-                'title' => '夏季特惠：全場商品8折起',
-                'url' => '/news/2',
-            ],
-            [
-                'id' => 3,
-                'title' => '會員專屬活動：購物滿NT$2000送精美禮品',
-                'url' => '/news/3',
-            ],
-        ];
 
         $testimonials = [
             [
@@ -61,7 +43,10 @@ class InertiaHomeController extends Controller
 
         return Inertia::render('home', [
             'hotProductsData' => $hotProductsData,
-            'newsItems' => $newsItems,
+            'newsItems' => News::limit(5)
+                ->orderBy('id', 'desc')
+                ->select(['slug', 'title'])
+                ->get(),
             'testimonials' => $testimonials,
         ]);
     }

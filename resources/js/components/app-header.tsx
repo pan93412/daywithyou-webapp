@@ -16,8 +16,8 @@ const navbarItems = [
         href: '/new-arrivals',
     },
     {
-        name: '優惠活動',
-        href: '/promotions',
+        name: '最新消息',
+        href: '/news',
     },
     {
         name: '關於我們',

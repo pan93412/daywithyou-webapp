@@ -19,7 +19,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ image, alt, name, description
                 <h3 className="mb-1 text-lg font-semibold">{name}</h3>
                 <p className="mb-2 text-sm text-zinc-500">{description}</p>
             </div>
-            <div className="mb-3 text-lg font-bold text-emerald-600">NT${price}</div>
+            <div className="mb-3 text-lg font-bold text-primary">NT${price}</div>
             <div className="flex gap-2">
                 <Link href={`/products/${id}`}>
                     <Button variant="outline" className="flex-1">

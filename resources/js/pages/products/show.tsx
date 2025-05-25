@@ -5,8 +5,10 @@ import { AppHeader } from '@/components/app-header';
 import { ArrowLeft } from 'lucide-react';
 import ProductComments, { ProductCommentsSkeleton } from '@/components/products/comments';
 import NewComments from '@/components/products/new-comments';
-import { Deferred } from '@inertiajs/react';
+import { Deferred, router } from '@inertiajs/react';
 import { AppContent } from '@/components/app-content';
+import { toast, useSonner } from 'sonner';
+import { useState } from 'react';
 
 interface Props {
     productData: Data<Product>,
@@ -15,6 +17,22 @@ interface Props {
 
 export default function ProductDetails({ productData, commentsData }: Props) {
     const { image, name, price, description } = productData.data;
+    const [quantity, setQuantity] = useState(1);
+
+    const handleAddToCart = () => {
+        router.post(route('inertia-product-cart.store', {product: productData.data.id}), {
+            quantity,
+        }, {
+            onSuccess: () => {
+                toast.info('已加入購物車！');
+            },
+            onError(error) {
+                for (const value of Object.values(error)) {
+                    toast.error(value);
+                }
+            }
+        })
+    };
 
     return (
         <AppContent>
@@ -42,10 +60,10 @@ export default function ProductDetails({ productData, commentsData }: Props) {
                         <p className="text-zinc-700 mb-4 whitespace-pre-line">{description}</p>
                         <div className="flex items-center gap-2 mb-4">
                             <span>數量：</span>
-                            <Input type="number" min={1} defaultValue={1} className="w-20" />
+                            <Input type="number" min={1} value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="w-20" />
                         </div>
                         <div className="flex gap-4">
-                            <Button className="flex-1 bg-primary hover:bg-primary/90 text-white">加入購物車</Button>
+                            <Button className="flex-1 bg-primary hover:bg-primary/90 text-white" onClick={handleAddToCart}>加入購物車</Button>
                             <Button className="flex-1" variant="outline">立刻購買</Button>
                         </div>
                     </div>

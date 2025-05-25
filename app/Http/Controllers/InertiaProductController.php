@@ -7,7 +7,6 @@ use App\Http\Resources\ProductIndexResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Comment;
 use App\Models\Product;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -38,6 +37,13 @@ class InertiaProductController extends Controller
         return Inertia::render('products/show', [
             'productData' => $productData,
             'commentsData' => Inertia::defer(fn () => $this->getCommentsData($product)),
+        ]);
+    }
+
+    public function addToCert(Product $product) {
+        // write current product to session
+        session([
+            'cert' => [...session('cert', []), $product->id]
         ]);
     }
 

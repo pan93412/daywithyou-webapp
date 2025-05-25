@@ -62,3 +62,11 @@ export interface NewsIndex {
     slug: string;
     created_at: Date;
 }
+
+export interface News {
+    title: string;
+    slug: string;
+    content: string;
+    created_at: Date;
+    updated_at: Date;
+}

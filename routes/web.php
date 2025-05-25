@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\InertiaHomeController;
+use App\Http\Controllers\InertiaNewsController;
 use App\Http\Controllers\InertiaProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -10,6 +11,8 @@ Route::post('/newsletter/subscribe', [InertiaHomeController::class, 'subscribe']
 Route::get('/products', [InertiaProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product}', [InertiaProductController::class, 'show'])->name('products.show');
 Route::post('/products/{product}/new-comment', [InertiaProductController::class, 'store'])->name('products.comment.store');
+Route::get('/news', [InertiaNewsController::class, 'index'])->name('inertia-news.index');
+Route::get('/news/{slug}', [InertiaNewsController::class, 'show'])->name('inertia-news.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {

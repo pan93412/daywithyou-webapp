@@ -57,14 +57,14 @@ export const NewsBanner: React.FC<NewsBannerProps> = ({ news }) => {
                                     pointerEvents: index === currentIndex ? 'auto' : 'none',
                                 }}
                             >
-                                <Link href={`/news/${item.slug}`} className="block truncate hover:text-emerald-600">
+                                <Link href={route('inertia-news.show', { slug: item.slug })} className="block truncate hover:text-emerald-600">
                                     {item.title}
                                 </Link>
                             </div>
                         ))}
                     </div>
                 </div>
-                <Link href="/news" className="text-sm text-emerald-600 hover:underline">
+                <Link href={route('inertia-news.index')} className="text-sm text-emerald-600 hover:underline">
                     查看全部
                 </Link>
             </div>

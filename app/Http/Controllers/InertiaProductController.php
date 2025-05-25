@@ -23,7 +23,7 @@ class InertiaProductController extends Controller
             $products = Product::paginate(6);
         }
 
-        $data = ProductResource::collection($products);
+        $data = ProductIndexResource::collection($products);
 
         return Inertia::render('products/index', [
             'reply' => $data,

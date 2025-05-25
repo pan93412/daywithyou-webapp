@@ -16,6 +16,7 @@ Route::post('/products/{product}/add-to-cart', [InertiaProductCartController::cl
 Route::get('/news', [InertiaNewsController::class, 'index'])->name('inertia-news.index');
 Route::get('/news/{slug}', [InertiaNewsController::class, 'show'])->name('inertia-news.show');
 Route::get('/carts', [InertiaProductCartController::class, 'index'])->name('inertia-product-cart.index');
+Route::post('/carts/clear', [InertiaProductCartController::class, 'clear'])->name('inertia-product-cart.clear');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {

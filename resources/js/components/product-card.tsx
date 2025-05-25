@@ -16,6 +16,8 @@ export default function ProductCard({ image, alt, name, description, price, id }
     const handleAddToCart = useCallback(async () => {
         router.post(route('inertia-product-cart.store', {product: id}), {
             quantity: 1,
+        }, {
+            preserveScroll: true
         });
 
         toast.info('已加入購物車');

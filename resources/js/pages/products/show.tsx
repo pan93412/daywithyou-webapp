@@ -8,7 +8,7 @@ import NewComments from '@/components/products/new-comments';
 import { Deferred, router } from '@inertiajs/react';
 import { AppContent } from '@/components/app-content';
 import { toast, useSonner } from 'sonner';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Props {
     productData: Data<Product>,
@@ -23,6 +23,7 @@ export default function ProductDetails({ productData, commentsData }: Props) {
         router.post(route('inertia-product-cart.store', {product: productData.data.id}), {
             quantity,
         }, {
+            preserveScroll: true,
             onSuccess: () => {
                 toast.info('已加入購物車！');
             },

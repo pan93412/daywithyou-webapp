@@ -24,8 +24,8 @@ export interface NavItem {
 
 export interface SharedData {
     name: string;
-    quote: { message: string; author: string };
     auth: Auth;
+    cart: Record<string, { quantity: number }>;
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
     [key: string]: unknown;

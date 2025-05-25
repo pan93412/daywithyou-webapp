@@ -1,11 +1,12 @@
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Badge, Menu, Search, ShoppingCart, User } from 'lucide-react';
-import { Head, Link, usePage, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLogoIcon from '@/components/app-logo-icon';
 import { Input } from '@/components/ui/input';
 import type { SharedData } from '@/types';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import { toast } from 'sonner';
 
 const navbarItems = [
     {
@@ -31,8 +32,18 @@ export interface AppHeaderProps {
 }
 
 export function AppHeader({ title }: AppHeaderProps) {
-    const { props: { auth } } = usePage<SharedData>();
+    const { props: { auth, cart } } = usePage<SharedData>();
     const formRef = useRef<HTMLFormElement | null>(null);
+
+    const cartCount = Object.keys(cart).length;
+
+    const handleClearCarts = () => {
+        router.post(route('inertia-product-cart.clear'), undefined, {
+            onSuccess: () => {
+              toast.info('已清空購物車');
+            },
+        });
+    }
 
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
@@ -94,9 +105,11 @@ export function AppHeader({ title }: AppHeaderProps) {
                     <Button variant="ghost" size="icon" className="relative lg:hidden" aria-label="Search">
                         <Search className="h-5 w-5" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="relative" aria-label="Shopping cart">
+                    <Button variant="ghost" size="icon" className="relative" aria-label="Shopping cart" onClick={handleClearCarts}>
                         <ShoppingCart className="h-5 w-5" />
-                        <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-emerald-500 p-0 text-xs text-white">3</Badge>
+                        {cartCount > 0 && (
+                            <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-emerald-500 p-0 text-xs text-white">{cartCount}</Badge>
+                        )}
                     </Button>
                     <Link href="/dashboard">
                         {auth.user ? (

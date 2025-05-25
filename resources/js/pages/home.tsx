@@ -1,7 +1,6 @@
 import { AppHeader } from '@/components/app-header';
 import ProductCard from '@/components/product-card';
-import { ProductIndex } from '@/types/products';
-import { Data } from '@/types/resource';
+import { Data, ProductIndex } from '@/types/resource';
 
 interface Props {
     hotProductsData: Data<ProductIndex[]>;

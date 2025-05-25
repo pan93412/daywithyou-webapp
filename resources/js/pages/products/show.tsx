@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Product } from '@/types/products';
-import { Comment, Data } from '@/types/resource';
+import { Comment, Data, Product } from '@/types/resource';
 import { AppHeader } from '@/components/app-header';
 import { ArrowLeft } from 'lucide-react';
 import ProductComments from '@/components/products/comments';

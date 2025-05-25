@@ -1,17 +1,19 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Product } from '@/types/products';
-import { Data } from '@/types/resource';
+import { Comment, Data } from '@/types/resource';
 import { AppHeader } from '@/components/app-header';
 import { ArrowLeft } from 'lucide-react';
 import ProductComments from '@/components/products/comments';
 import NewComments from '@/components/products/new-comments';
+import { Deferred } from '@inertiajs/react';
 
 interface Props {
     productData: Data<Product>,
+    commentsData?: Data<Comment[]>,
 }
 
-export default function ProductDetails({ productData }: Props) {
+export default function ProductDetails({ productData, commentsData }: Props) {
     const { image, name, price, description } = productData.data;
 
     return (
@@ -55,7 +57,9 @@ export default function ProductDetails({ productData }: Props) {
                     <div className="mb-4">
                         <NewComments productId={productData.data.id} />
                     </div>
-                    <ProductComments productId={productData.data.id} />
+                    <Deferred fallback={<span className="text-zinc-600">正在取回評價……</span>} data="commentsData">
+                        <ProductComments comments={commentsData?.data} />
+                    </Deferred>
                 </section>
             </main>
         </div>

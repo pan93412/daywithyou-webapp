@@ -1,25 +1,21 @@
-import { usePage, router } from '@inertiajs/react';
-import { FormEvent, useCallback, useState } from 'react';
-import { useSWRConfig } from 'swr';
+import { useForm } from '@inertiajs/react';
+import { FormEvent, useCallback } from 'react';
 
 export interface NewCommentsProps {
     productId: number
 }
 
 export default function NewComments({ productId }: NewCommentsProps) {
-    const { errors } = usePage().props;
-    const { mutate } = useSWRConfig();
-
-    const [star, setStar] = useState<number>(5);
-    const [content, setContent] = useState<string>('');
+    const {data, setData, post, processing, errors, reset} = useForm({
+        star: 5,
+        content: '',
+    });
 
     const handleSubmit = useCallback(async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        router.post(`/api/v1/products/${productId}/comments`, { content, star });
-
-        // invalidate comment list
-        await mutate(`/api/v1/products/${productId}/comments`);
-    }, [productId, content, star, mutate]);
+        post(`/products/${productId}/new-comment`);
+        reset();
+    }, [post, reset, productId]);
 
     return (
         <form
@@ -36,8 +32,8 @@ export default function NewComments({ productId }: NewCommentsProps) {
                 </div>
                 <input
                     id="star"
-                    value={star}
-                    onChange={e => setStar(Number(e.target.value))}
+                    value={data.star}
+                    onChange={e => setData('star', Number(e.target.value))}
                     type="number"
                     min="1"
                     max="5"
@@ -57,8 +53,8 @@ export default function NewComments({ productId }: NewCommentsProps) {
                 <input
                     type="text"
                     id="content"
-                    value={content}
-                    onChange={e => setContent(e.target.value)}
+                    value={data.content}
+                    onChange={e => setData('content', e.target.value)}
                     className="border border-zinc-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-zinc-800 text-base shadow-sm h-[40px] w-full"
                 />
             </div>
@@ -68,6 +64,7 @@ export default function NewComments({ productId }: NewCommentsProps) {
                 type="submit"
                 className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-5 rounded-md transition-colors shadow-sm h-[40px] flex items-center justify-center flex-shrink-0"
                 style={{ minWidth: '70px' }}
+                disabled={processing}
             >
                 送出
             </button>

@@ -1,29 +1,8 @@
-import useSWR from 'swr';
-import { commentResourceDataSchema } from '@/types/api-schema';
-
 export interface ProductCommentsProps {
-    productId: number;
+    comments: Comment[];
 }
 
-export default function ProductComments({ productId }: ProductCommentsProps) {
-    const { data, error } = useSWR(
-        `/api/v1/products/${productId}/comments`,
-        fetcher,
-        {
-            suspense: true
-        }
-    );
-
-    if (error) {
-        return (
-            <>
-                <span className="text-red-800">無法載入評論</span>
-                <span className="text-sm text-zinc-600">{`${error}`}</span>
-            </>
-        );
-    }
-
-    const comments = data?.data ?? [];
+export default function ProductComments({ comments }: ProductCommentsProps) {
     const totalComments = comments.length;
     const averageRating = comments.reduce((total, comment) => total + comment.star, 0) / totalComments;
 
@@ -50,16 +29,6 @@ export default function ProductComments({ productId }: ProductCommentsProps) {
             ))}
         </>
     )
-}
-
-async function fetcher(key: string) {
-    const res = await fetch(key);
-    if (!res.ok) {
-        throw new Error(res.statusText);
-    }
-
-    const data = await res.json();
-    return commentResourceDataSchema.parse(data);
 }
 
 function renderStar(rating: number): string {

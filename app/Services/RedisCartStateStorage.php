@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Models\Product;
 use App\Models\State\CartState;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
+use Exception;
 
 class RedisCartStateStorage implements CartStateStorage
 {
@@ -23,30 +25,37 @@ class RedisCartStateStorage implements CartStateStorage
      */
     public function list(): array
     {
-        $sessionPrefix = $this->getSessionPrefix();
-        $pattern = $sessionPrefix.'product:*';
-        $keys = Redis::keys($pattern);
-        $result = [];
+        try {
+            $sessionPrefix = $this->getSessionPrefix();
+            $pattern = $sessionPrefix.'product:*';
+            $keys = Redis::keys($pattern);
+            $result = [];
 
-        foreach ($keys as $key) {
-            // Get the Redis prefix from config
-            $redisPrefix = config('database.redis.options.prefix');
+            foreach ($keys as $key) {
+                // Get the Redis prefix from config
+                $redisPrefix = config('database.redis.options.prefix');
 
-            // Remove Redis prefix from the key if it exists
-            $actualKey = str_replace($redisPrefix, '', $key);
+                // Remove Redis prefix from the key if it exists
+                $actualKey = str_replace($redisPrefix, '', $key);
 
-            // Extract the product ID from the key
-            $productId = str_replace($sessionPrefix.'product:', '', $actualKey);
+                // Extract the product ID from the key
+                $productId = str_replace($sessionPrefix.'product:', '', $actualKey);
 
-            // Get the data for this product
-            $data = Redis::get($actualKey);
+                // Get the data for this product
+                $data = Redis::get($actualKey);
 
-            if ($data) {
-                $result[$productId] = CartState::fromArray(json_decode($data, true));
+                if ($data) {
+                    $result[$productId] = CartState::fromArray(json_decode($data, true));
+                }
             }
-        }
 
-        return $result;
+            return $result;
+        } catch (Exception $e) {
+            Log::error('Redis cart list error: ' . $e->getMessage(), [
+                'exception' => $e,
+            ]);
+            return [];
+        }
     }
 
     /**
@@ -54,14 +63,22 @@ class RedisCartStateStorage implements CartStateStorage
      */
     public function get(Product $product): CartState
     {
-        $key = $this->getProductKey($product->id);
-        $data = Redis::get($key);
+        try {
+            $key = $this->getProductKey($product->id);
+            $data = Redis::get($key);
 
-        if (! $data) {
+            if (! $data) {
+                return new CartState(0);
+            }
+
+            return CartState::fromArray(json_decode($data, true));
+        } catch (Exception $e) {
+            Log::error('Redis cart get error: ' . $e->getMessage(), [
+                'exception' => $e,
+                'product_id' => $product->id,
+            ]);
             return new CartState(0);
         }
-
-        return CartState::fromArray(json_decode($data, true));
     }
 
     /**
@@ -69,11 +86,19 @@ class RedisCartStateStorage implements CartStateStorage
      */
     public function set(Product $product, CartState $data): void
     {
-        $key = $this->getProductKey($product->id);
-        Redis::set($key, json_encode($data->toArray()));
+        try {
+            $key = $this->getProductKey($product->id);
+            Redis::set($key, json_encode($data->toArray()));
 
-        // Set expiration time (e.g., 7 days)
-        Redis::expire($key, $this->expiration);
+            // Set expiration time (e.g., 7 days)
+            Redis::expire($key, $this->expiration);
+        } catch (Exception $e) {
+            Log::error('Redis cart set error: ' . $e->getMessage(), [
+                'exception' => $e,
+                'product_id' => $product->id,
+                'data' => $data->toArray(),
+            ]);
+        }
     }
 
     /**
@@ -81,8 +106,15 @@ class RedisCartStateStorage implements CartStateStorage
      */
     public function delete(Product $product): void
     {
-        $key = $this->getProductKey($product->id);
-        Redis::del($key);
+        try {
+            $key = $this->getProductKey($product->id);
+            Redis::del($key);
+        } catch (Exception $e) {
+            Log::error('Redis cart delete error: ' . $e->getMessage(), [
+                'exception' => $e,
+                'product_id' => $product->id,
+            ]);
+        }
     }
 
     /**
@@ -90,17 +122,27 @@ class RedisCartStateStorage implements CartStateStorage
      */
     public function clear(): void
     {
-        $redisPrefix = config('database.redis.options.prefix');
-        $sessionPrefix = $this->getSessionPrefix();
-        $allKeys = Redis::keys("{$sessionPrefix}*");
+        try {
+            $redisPrefix = config('database.redis.options.prefix');
+            $sessionPrefix = $this->getSessionPrefix();
+            $allKeys = Redis::keys("{$sessionPrefix}*");
 
-        // Remove all "$redisPrefix" from the keys
-        // FIXME: is it so ugly?
-        $allKeys = array_map(function ($key) use ($redisPrefix) {
-            return str_replace($redisPrefix, '', $key);
-        }, $allKeys);
+            if (empty($allKeys)) {
+                return;
+            }
 
-        Redis::del($allKeys);
+            // Remove all "$redisPrefix" from the keys
+            // FIXME: is it so ugly?
+            $allKeys = array_map(function ($key) use ($redisPrefix) {
+                return str_replace($redisPrefix, '', $key);
+            }, $allKeys);
+
+            Redis::del($allKeys);
+        } catch (Exception $e) {
+            Log::error('Redis cart clear error: ' . $e->getMessage(), [
+                'exception' => $e,
+            ]);
+        }
     }
 
     protected function getSessionPrefix(): string

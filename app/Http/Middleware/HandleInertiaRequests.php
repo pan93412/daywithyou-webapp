@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Services\CartService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
 
@@ -41,13 +42,23 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        // Safely get cart data with error handling
+        $cart = [];
+        try {
+            $cart = $this->cartService->list();
+        } catch (\Exception $e) {
+            Log::error('Error loading cart data: ' . $e->getMessage(), [
+                'exception' => $e,
+            ]);
+        }
+        
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
             ],
-            'cart' => $this->cartService->list(),
+            'cart' => $cart,
             'ziggy' => fn (): array => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),

@@ -16,7 +16,7 @@ class InertiaProductController extends Controller
     public function index()
     {
         $paginatedProductsData = ProductIndexResource::collection(
-            Product::paginate(5)
+            Product::paginate(6)
         );
 
         return Inertia::render('products/index', [

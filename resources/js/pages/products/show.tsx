@@ -38,14 +38,14 @@ export default function ProductDetails({ productData, commentsData }: Props) {
                     </div>
                     <div className="flex flex-col gap-4 md:w-1/2">
                         <h1 className="text-2xl font-bold mb-2">{name}</h1>
-                        <div className="text-emerald-600 text-xl font-semibold mb-2">NT${price}</div>
+                        <div className="text-primary text-xl font-semibold mb-2">NT${price}</div>
                         <p className="text-zinc-700 mb-4 whitespace-pre-line">{description}</p>
                         <div className="flex items-center gap-2 mb-4">
                             <span>數量：</span>
                             <Input type="number" min={1} defaultValue={1} className="w-20" />
                         </div>
                         <div className="flex gap-4">
-                            <Button className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white">加入購物車</Button>
+                            <Button className="flex-1 bg-primary hover:bg-primary/90 text-white">加入購物車</Button>
                             <Button className="flex-1" variant="outline">立刻購買</Button>
                         </div>
                     </div>

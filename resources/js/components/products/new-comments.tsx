@@ -62,7 +62,7 @@ export default function NewComments({ productId }: NewCommentsProps) {
             {/* Submit Button */}
             <button
                 type="submit"
-                className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2 px-5 rounded-md transition-colors shadow-sm h-[40px] flex items-center justify-center flex-shrink-0"
+                className="bg-primary hover:bg-primary/90 text-white font-medium py-2 px-5 rounded-md transition-colors shadow-sm h-[40px] flex items-center justify-center flex-shrink-0"
                 style={{ minWidth: '70px' }}
                 disabled={processing}
             >

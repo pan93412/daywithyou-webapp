@@ -16,7 +16,7 @@ export default function ProductsList({paginatedProductsData}: Props) {
 
             <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
                 <h2 className="mb-8 text-center text-2xl font-bold">所有商品</h2>
-                
+
                 {/* Products Grid */}
                 <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 mb-8">
                     {paginatedProductsData.data.map((product) => (
@@ -31,30 +31,26 @@ export default function ProductsList({paginatedProductsData}: Props) {
                         />
                     ))}
                 </div>
-                
+
                 {/* Pagination Controls */}
                 {paginatedProductsData.meta.last_page > 1 && (
                     <div className="flex justify-center items-center gap-2 mt-8">
-                        {paginatedProductsData.links.prev && (
-                            <Link href={paginatedProductsData.links.prev}>
-                                <Button variant="outline" size="sm">
-                                    上一頁
-                                </Button>
-                            </Link>
-                        )}
-                        
                         {paginatedProductsData.meta.links.map((link, index) => (
                             link.url ? (
-                                <Link 
-                                    key={index} 
+                                <Link
+                                    key={index}
                                     href={link.url}
                                 >
-                                    <Button 
-                                        variant={link.active ? "default" : "outline"} 
+                                    <Button
+                                        variant={link.active ? "default" : "outline"}
                                         size="sm"
                                         className="min-w-[2.5rem]"
                                     >
-                                        {link.label.replace(/&laquo;|&raquo;/g, '')}
+                                        {
+                                            link.label
+                                                .replace("&laquo;", "←")
+                                                .replace("&raquo;", "→")
+                                        }
                                     </Button>
                                 </Link>
                             ) : (
@@ -63,17 +59,9 @@ export default function ProductsList({paginatedProductsData}: Props) {
                                 </span>
                             )
                         ))}
-                        
-                        {paginatedProductsData.links.next && (
-                            <Link href={paginatedProductsData.links.next}>
-                                <Button variant="outline" size="sm">
-                                    下一頁
-                                </Button>
-                            </Link>
-                        )}
                     </div>
                 )}
-                
+
                 <div className="text-center text-sm text-gray-500 mt-4">
                     顯示 {paginatedProductsData.meta.from} 至 {paginatedProductsData.meta.to} 筆，共 {paginatedProductsData.meta.total} 筆商品
                 </div>

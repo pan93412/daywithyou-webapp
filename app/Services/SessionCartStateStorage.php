@@ -4,9 +4,9 @@ namespace App\Services;
 
 use App\Models\Product;
 use App\Models\State\CartState;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
-use Exception;
 
 class SessionCartStateStorage implements CartStateStorage
 {
@@ -31,9 +31,10 @@ class SessionCartStateStorage implements CartStateStorage
 
             return $result;
         } catch (Exception $e) {
-            Log::error('Session cart list error: ' . $e->getMessage(), [
+            Log::error('Session cart list error: '.$e->getMessage(), [
                 'exception' => $e,
             ]);
+
             return [];
         }
     }
@@ -46,17 +47,18 @@ class SessionCartStateStorage implements CartStateStorage
         try {
             $sessionKey = $this->getSessionKey();
             $cartData = Session::get($sessionKey, []);
-            
-            if (!isset($cartData[$product->id])) {
+
+            if (! isset($cartData[$product->id])) {
                 return new CartState(0);
             }
 
             return CartState::fromArray($cartData[$product->id]);
         } catch (Exception $e) {
-            Log::error('Session cart get error: ' . $e->getMessage(), [
+            Log::error('Session cart get error: '.$e->getMessage(), [
                 'exception' => $e,
                 'product_id' => $product->id,
             ]);
+
             return new CartState(0);
         }
     }
@@ -69,12 +71,12 @@ class SessionCartStateStorage implements CartStateStorage
         try {
             $sessionKey = $this->getSessionKey();
             $cartData = Session::get($sessionKey, []);
-            
+
             $cartData[$product->id] = $data->toArray();
-            
+
             Session::put($sessionKey, $cartData);
         } catch (Exception $e) {
-            Log::error('Session cart set error: ' . $e->getMessage(), [
+            Log::error('Session cart set error: '.$e->getMessage(), [
                 'exception' => $e,
                 'product_id' => $product->id,
                 'data' => $data->toArray(),
@@ -90,13 +92,13 @@ class SessionCartStateStorage implements CartStateStorage
         try {
             $sessionKey = $this->getSessionKey();
             $cartData = Session::get($sessionKey, []);
-            
+
             if (isset($cartData[$product->id])) {
                 unset($cartData[$product->id]);
                 Session::put($sessionKey, $cartData);
             }
         } catch (Exception $e) {
-            Log::error('Session cart delete error: ' . $e->getMessage(), [
+            Log::error('Session cart delete error: '.$e->getMessage(), [
                 'exception' => $e,
                 'product_id' => $product->id,
             ]);
@@ -111,7 +113,7 @@ class SessionCartStateStorage implements CartStateStorage
         try {
             Session::forget($this->getSessionKey());
         } catch (Exception $e) {
-            Log::error('Session cart clear error: ' . $e->getMessage(), [
+            Log::error('Session cart clear error: '.$e->getMessage(), [
                 'exception' => $e,
             ]);
         }

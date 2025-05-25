@@ -16,7 +16,7 @@ beforeEach(function () {
     ]);
 
     // Create the storage instance
-    $this->storage = new SessionCartStateStorage();
+    $this->storage = new SessionCartStateStorage;
 });
 
 afterEach(function () {

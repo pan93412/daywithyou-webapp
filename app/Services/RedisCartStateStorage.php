@@ -4,9 +4,9 @@ namespace App\Services;
 
 use App\Models\Product;
 use App\Models\State\CartState;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
-use Exception;
 
 class RedisCartStateStorage implements CartStateStorage
 {
@@ -51,9 +51,10 @@ class RedisCartStateStorage implements CartStateStorage
 
             return $result;
         } catch (Exception $e) {
-            Log::error('Redis cart list error: ' . $e->getMessage(), [
+            Log::error('Redis cart list error: '.$e->getMessage(), [
                 'exception' => $e,
             ]);
+
             return [];
         }
     }
@@ -73,10 +74,11 @@ class RedisCartStateStorage implements CartStateStorage
 
             return CartState::fromArray(json_decode($data, true));
         } catch (Exception $e) {
-            Log::error('Redis cart get error: ' . $e->getMessage(), [
+            Log::error('Redis cart get error: '.$e->getMessage(), [
                 'exception' => $e,
                 'product_id' => $product->id,
             ]);
+
             return new CartState(0);
         }
     }
@@ -93,7 +95,7 @@ class RedisCartStateStorage implements CartStateStorage
             // Set expiration time (e.g., 7 days)
             Redis::expire($key, $this->expiration);
         } catch (Exception $e) {
-            Log::error('Redis cart set error: ' . $e->getMessage(), [
+            Log::error('Redis cart set error: '.$e->getMessage(), [
                 'exception' => $e,
                 'product_id' => $product->id,
                 'data' => $data->toArray(),
@@ -110,7 +112,7 @@ class RedisCartStateStorage implements CartStateStorage
             $key = $this->getProductKey($product->id);
             Redis::del($key);
         } catch (Exception $e) {
-            Log::error('Redis cart delete error: ' . $e->getMessage(), [
+            Log::error('Redis cart delete error: '.$e->getMessage(), [
                 'exception' => $e,
                 'product_id' => $product->id,
             ]);
@@ -139,7 +141,7 @@ class RedisCartStateStorage implements CartStateStorage
 
             Redis::del($allKeys);
         } catch (Exception $e) {
-            Log::error('Redis cart clear error: ' . $e->getMessage(), [
+            Log::error('Redis cart clear error: '.$e->getMessage(), [
                 'exception' => $e,
             ]);
         }

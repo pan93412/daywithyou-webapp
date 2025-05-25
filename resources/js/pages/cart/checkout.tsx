@@ -1,19 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppMainLayout from '@/layouts/app/app-main-layout';
+import { SharedData } from '@/types';
 import { ProductIndex } from '@/types/resource';
 import { Link, router, usePage } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { toast } from 'sonner';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import { SharedData } from '@/types';
 
 interface CartItem {
     data: ProductIndex;
@@ -41,11 +35,11 @@ export default function CheckoutPage({ carts }: Props) {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSelectChange = (name: string, value: string) => {
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = (e: FormEvent) => {
@@ -78,10 +72,7 @@ export default function CheckoutPage({ carts }: Props) {
         <AppMainLayout title="結帳">
             <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
                 <div className="mb-6">
-                    <Link
-                        href={route('carts.index')}
-                        className="mb-6 flex items-center gap-1 text-base font-medium text-emerald-700 hover:underline"
-                    >
+                    <Link href={route('carts.index')} className="mb-6 flex items-center gap-1 text-base font-medium text-emerald-700 hover:underline">
                         <ArrowLeft /> 返回購物車
                     </Link>
                     <h1 className="text-2xl font-bold">結帳頁面</h1>
@@ -95,7 +86,9 @@ export default function CheckoutPage({ carts }: Props) {
 
                             <div className="space-y-4">
                                 <div>
-                                    <label htmlFor="name" className="mb-1 block text-sm font-medium">姓名</label>
+                                    <label htmlFor="name" className="mb-1 block text-sm font-medium">
+                                        姓名
+                                    </label>
                                     <Input
                                         id="name"
                                         name="name"
@@ -108,7 +101,9 @@ export default function CheckoutPage({ carts }: Props) {
 
                                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <label htmlFor="email" className="mb-1 block text-sm font-medium">電子郵件</label>
+                                        <label htmlFor="email" className="mb-1 block text-sm font-medium">
+                                            電子郵件
+                                        </label>
                                         <Input
                                             id="email"
                                             name="email"
@@ -120,7 +115,9 @@ export default function CheckoutPage({ carts }: Props) {
                                         />
                                     </div>
                                     <div>
-                                        <label htmlFor="phone" className="mb-1 block text-sm font-medium">手機號碼</label>
+                                        <label htmlFor="phone" className="mb-1 block text-sm font-medium">
+                                            手機號碼
+                                        </label>
                                         <Input
                                             id="phone"
                                             name="phone"
@@ -133,7 +130,9 @@ export default function CheckoutPage({ carts }: Props) {
                                 </div>
 
                                 <div>
-                                    <label htmlFor="address" className="mb-1 block text-sm font-medium">地址</label>
+                                    <label htmlFor="address" className="mb-1 block text-sm font-medium">
+                                        地址
+                                    </label>
                                     <Input
                                         id="address"
                                         name="address"
@@ -146,7 +145,9 @@ export default function CheckoutPage({ carts }: Props) {
 
                                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <label htmlFor="city" className="mb-1 block text-sm font-medium">城市</label>
+                                        <label htmlFor="city" className="mb-1 block text-sm font-medium">
+                                            城市
+                                        </label>
                                         <Input
                                             id="city"
                                             name="city"
@@ -157,7 +158,9 @@ export default function CheckoutPage({ carts }: Props) {
                                         />
                                     </div>
                                     <div>
-                                        <label htmlFor="zipCode" className="mb-1 block text-sm font-medium">郵遞區號</label>
+                                        <label htmlFor="zipCode" className="mb-1 block text-sm font-medium">
+                                            郵遞區號
+                                        </label>
                                         <Input
                                             id="zipCode"
                                             name="zipCode"
@@ -176,11 +179,10 @@ export default function CheckoutPage({ carts }: Props) {
 
                             <div className="space-y-4">
                                 <div>
-                                    <label htmlFor="paymentMethod" className="mb-1 block text-sm font-medium">選擇付款方式</label>
-                                    <Select
-                                        value={formData.paymentMethod}
-                                        onValueChange={(value) => handleSelectChange('paymentMethod', value)}
-                                    >
+                                    <label htmlFor="paymentMethod" className="mb-1 block text-sm font-medium">
+                                        選擇付款方式
+                                    </label>
+                                    <Select value={formData.paymentMethod} onValueChange={(value) => handleSelectChange('paymentMethod', value)}>
                                         <SelectTrigger id="paymentMethod" className="w-full">
                                             <SelectValue placeholder="選擇付款方式" />
                                         </SelectTrigger>
@@ -203,11 +205,7 @@ export default function CheckoutPage({ carts }: Props) {
                                 {carts.map(({ data: product, quantity }) => (
                                     <div key={product.slug} className="mb-3 flex items-center gap-2">
                                         <div className="h-12 w-12 flex-shrink-0">
-                                            <img
-                                                src={product.figure}
-                                                alt={product.name}
-                                                className="h-full w-full rounded-md border object-contain"
-                                            />
+                                            <img src={product.figure} alt={product.name} className="h-full w-full rounded-md border object-contain" />
                                         </div>
                                         <div className="flex-1 text-sm">
                                             <div className="font-medium">{product.name}</div>
@@ -237,11 +235,7 @@ export default function CheckoutPage({ carts }: Props) {
                                 </div>
                             </div>
 
-                            <Button
-                                type="submit"
-                                className="mt-6 w-full"
-                                disabled={isSubmitting}
-                            >
+                            <Button type="submit" className="mt-6 w-full" disabled={isSubmitting}>
                                 {isSubmitting ? '處理中...' : '提交訂單'}
                             </Button>
                         </div>

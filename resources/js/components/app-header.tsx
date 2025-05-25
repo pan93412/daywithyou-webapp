@@ -3,10 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import type { SharedData } from '@/types';
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { Badge, Menu, Search, ShoppingCart, User } from 'lucide-react';
 import { useRef } from 'react';
-import { toast } from 'sonner';
 
 const navbarItems = [
     {
@@ -103,7 +102,9 @@ export function AppHeader({ title }: AppHeaderProps) {
                         <Button variant="ghost" size="icon" className="relative" aria-label="Shopping cart">
                             <ShoppingCart className="h-5 w-5" />
                             {cartCount > 0 && (
-                                <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-emerald-500 p-0 text-xs text-white">{cartCount}</Badge>
+                                <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-emerald-500 p-0 text-xs text-white">
+                                    {cartCount}
+                                </Badge>
                             )}
                         </Button>
                     </Link>

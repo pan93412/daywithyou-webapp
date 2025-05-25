@@ -1,11 +1,11 @@
-import { ProductIndex } from '@/types/resource';
 import { Button } from '@/components/ui/button';
 import AppMainLayout from '@/layouts/app/app-main-layout';
+import { SharedData } from '@/types';
+import { ProductIndex } from '@/types/resource';
 import { Link, router, usePage } from '@inertiajs/react';
-import { Trash2, Minus, Plus, ShoppingBag } from 'lucide-react';
+import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import { useCallback } from 'react';
 import { toast } from 'sonner';
-import { SharedData } from '@/types';
 
 interface CartItem {
     data: ProductIndex;
@@ -34,11 +34,7 @@ export default function CartPage({ carts }: Props) {
                         <div className="flex-1">
                             <div className="rounded-xl bg-white p-6 shadow-md">
                                 {carts.map(({ data: product, quantity }) => (
-                                    <CartItem
-                                        key={product.slug}
-                                        product={product}
-                                        quantity={quantity}
-                                    />
+                                    <CartItem key={product.slug} product={product} quantity={quantity} />
                                 ))}
                             </div>
                         </div>
@@ -62,7 +58,7 @@ function CartItem({ product, quantity }: { product: ProductIndex; quantity: numb
                         <img
                             src={product.figure}
                             alt={product.name}
-                            className="h-full w-full rounded-md border object-contain hover:scale-105 transition"
+                            className="h-full w-full rounded-md border object-contain transition hover:scale-105"
                         />
                     </Link>
                 </div>
@@ -86,41 +82,22 @@ function CartItem({ product, quantity }: { product: ProductIndex; quantity: numb
 
 function CartQuantity({ product, quantity }: { product: string; quantity: number }) {
     const increment = useCallback(() => {
-        router.post(
-            route('carts.increment', { product }),
-            { quantity: 1 },
-            { preserveScroll: true }
-        );
+        router.post(route('carts.increment', { product }), { quantity: 1 }, { preserveScroll: true });
     }, [product]);
 
     const decrement = useCallback(() => {
         if (quantity > 1) {
-            router.post(
-                route('carts.increment', { product }),
-                { quantity: -1 },
-                { preserveScroll: true }
-            );
+            router.post(route('carts.increment', { product }), { quantity: -1 }, { preserveScroll: true });
         }
     }, [product, quantity]);
 
     return (
         <div className="flex items-center gap-2">
-            <Button
-                onClick={decrement}
-                variant="outline"
-                size="icon"
-                className="h-8 w-8"
-                disabled={quantity <= 1}
-            >
+            <Button onClick={decrement} variant="outline" size="icon" className="h-8 w-8" disabled={quantity <= 1}>
                 <Minus className="h-4 w-4" />
             </Button>
             <span className="w-8 text-center">{quantity}</span>
-            <Button
-                onClick={increment}
-                variant="outline"
-                size="icon"
-                className="h-8 w-8"
-            >
+            <Button onClick={increment} variant="outline" size="icon" className="h-8 w-8">
                 <Plus className="h-4 w-4" />
             </Button>
         </div>
@@ -129,24 +106,16 @@ function CartQuantity({ product, quantity }: { product: string; quantity: number
 
 function CartRemove({ product }: { product: string }) {
     const remove = useCallback(() => {
-        router.delete(
-            route('carts.remove', { product }),
-            {
-                preserveScroll: true,
-                onSuccess: () => {
-                    toast.success('商品已從購物車移除');
-                }
-            }
-        );
+        router.delete(route('carts.remove', { product }), {
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.success('商品已從購物車移除');
+            },
+        });
     }, [product]);
 
     return (
-        <Button
-            onClick={remove}
-            variant="ghost"
-            size="icon"
-            className="text-red-500 hover:bg-red-50 hover:text-red-600"
-        >
+        <Button onClick={remove} variant="ghost" size="icon" className="text-red-500 hover:bg-red-50 hover:text-red-600">
             <Trash2 className="h-4 w-4" />
         </Button>
     );
@@ -177,9 +146,7 @@ function OrderSummary({ totalPrice, itemCount }: { totalPrice: number; itemCount
             </div>
 
             <Link href={route('carts.checkout')}>
-                <Button className="mt-6 w-full">
-                    {auth.user ? '前往結帳' : '登入後前往結帳'}
-                </Button>
+                <Button className="mt-6 w-full">{auth.user ? '前往結帳' : '登入後前往結帳'}</Button>
             </Link>
         </div>
     );

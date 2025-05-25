@@ -27,7 +27,7 @@ class CartService
 
         return match ($this->driver) {
             'redis' => new RedisCartStateStorage($this->getUserIdentifier(), $expiration),
-            'storage' => new SessionCartStateStorage(),
+            'storage' => new SessionCartStateStorage,
             default => throw new \InvalidArgumentException('Invalid cart storage driver: '.$this->driver),
         };
     }

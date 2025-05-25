@@ -51,7 +51,7 @@ class ProductController extends Controller
     public function storeComment(Request $request, Product $product)
     {
         $user = $request->user();
-        if (!$user) {
+        if (! $user) {
             return to_route('login');
         }
 

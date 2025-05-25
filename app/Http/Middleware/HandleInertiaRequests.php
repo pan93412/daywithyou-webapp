@@ -47,11 +47,11 @@ class HandleInertiaRequests extends Middleware
         try {
             $cart = $this->cartService->list();
         } catch (\Exception $e) {
-            Log::error('Error loading cart data: ' . $e->getMessage(), [
+            Log::error('Error loading cart data: '.$e->getMessage(), [
                 'exception' => $e,
             ]);
         }
-        
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),

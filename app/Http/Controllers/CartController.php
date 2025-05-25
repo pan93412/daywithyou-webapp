@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ProductIndexResource;
 use App\Models\Product;
 use App\Services\CartService;
-use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -25,12 +24,12 @@ class CartController extends Controller
             $product = Product::find($productId);
 
             $carts[] = ProductIndexResource::make($product)->additional([
-                'quantity' => $cartState->quantity
+                'quantity' => $cartState->quantity,
             ]);
         }
 
         return inertia('cart/index', [
-            'carts' => $carts
+            'carts' => $carts,
         ]);
     }
 
@@ -43,12 +42,12 @@ class CartController extends Controller
             $product = Product::find($productId);
 
             $carts[] = ProductIndexResource::make($product)->additional([
-                'quantity' => $cartState->quantity
+                'quantity' => $cartState->quantity,
             ]);
         }
 
         return inertia('cart/checkout', [
-            'carts' => $carts
+            'carts' => $carts,
         ]);
     }
 
@@ -63,6 +62,7 @@ class CartController extends Controller
         if ($currentState->quantity + $input['quantity'] < 1) {
             // remove if quantity is below 1
             $this->remove($product);
+
             return;
         }
 

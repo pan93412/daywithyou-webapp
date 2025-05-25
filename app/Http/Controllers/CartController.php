@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductIndexResource;
 use App\Models\Product;
 use App\Services\CartService;
 
@@ -16,23 +17,38 @@ class CartController extends Controller
 
     public function index()
     {
-        return response()->json($this->cartService->list());
+        $rawCarts = $this->cartService->list();
+        $cartsReply = [];
+
+        foreach ($rawCarts as $productId => $cartState) {
+            $product = Product::find($productId);
+
+            $cartsReply[] = ProductIndexResource::make($product)->additional([
+                'quantity' => $cartState->quantity
+            ]);
+        }
+
+        return inertia('cart/index', [
+            'carts' => $cartsReply
+        ]);
     }
 
-    public function store(Product $product)
+    public function increment(Product $product)
     {
         $input = request()->validate([
-            'quantity' => ['required', 'numeric', 'min:1', 'max:100'],
+            'quantity' => ['required', 'numeric'],
         ]);
 
         $currentState = $this->cartService->get($product);
 
-        if ($currentState->quantity + $input['quantity'] > 100) {
-            return;  // do not add more than 100
+        if ($currentState->quantity + $input['quantity'] < 1) {
+            // remove if quantity is below 1
+            $this->remove($product);
+            return;
         }
 
         $newState = clone $currentState;
-        $newState->quantity += $input['quantity'];
+        $newState->quantity = min($newState->quantity + $input['quantity'], 100);
         $this->cartService->set($product, $newState);
     }
 

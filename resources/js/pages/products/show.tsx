@@ -20,7 +20,7 @@ export default function ProductDetails({ productReply, commentsReply }: Props) {
 
     const handleAddToCart = () => {
         router.post(
-            route('inertia-product-cart.store', { product: productReply.data.id }),
+            route('carts.increment', { product: productReply.data.slug }),
             {
                 quantity,
             },
@@ -76,7 +76,7 @@ export default function ProductDetails({ productReply, commentsReply }: Props) {
                 <section className="mt-10 px-2">
                     <h2 className="mb-3 text-lg font-semibold">商品評價</h2>
                     <div className="mb-4">
-                        <NewComments productId={productReply.data.id} />
+                        <NewComments product={productReply.data.slug} />
                     </div>
                     <Deferred fallback={<ProductCommentsSkeleton />} data="commentsReply">
                         <ProductComments comments={commentsReply?.data ?? []} />

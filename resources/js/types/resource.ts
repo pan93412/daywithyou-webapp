@@ -26,7 +26,7 @@ export interface PaginatedData<T> extends Data<T> {
 }
 
 export interface ProductIndex {
-    id: number;
+    slug: string;
     name: string;
     summary: string;
     price: string;
@@ -34,7 +34,7 @@ export interface ProductIndex {
 }
 
 export interface Product {
-    id: number;
+    slug: string;
     name: string;
     description: string;
     price: string;

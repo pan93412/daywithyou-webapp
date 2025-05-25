@@ -21,13 +21,13 @@ export default function ProductsList({ query, productsReply }: Props) {
                 <div className="mb-8 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
                     {productsReply.data.map((product) => (
                         <ProductCard
-                            key={product.id}
+                            key={product.slug}
                             figure={product.figure}
                             alt={product.name}
                             name={product.name}
                             summary={product.summary}
                             price={product.price}
-                            id={product.id}
+                            slug={product.slug}
                         />
                     ))}
                 </div>

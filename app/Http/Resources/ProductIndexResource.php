@@ -12,7 +12,7 @@ class ProductIndexResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
+            'slug' => $this->slug,
             'name' => $this->name,
             'summary' => mb_strlen($this->description) > 100
                 ? mb_substr($this->description, 0, 50).'……'

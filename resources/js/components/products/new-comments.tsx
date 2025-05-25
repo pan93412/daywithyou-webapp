@@ -3,24 +3,24 @@ import { FormEvent, useCallback } from 'react';
 import { route } from 'ziggy-js';
 
 export interface NewCommentsProps {
-    productId: number;
+    product: string;
 }
 
-export default function NewComments({ productId }: NewCommentsProps) {
+export default function NewComments({ product }: NewCommentsProps) {
     const { data, setData, post, processing, errors, reset } = useForm({
-        star: 5,
+        rating: 5,
         content: '',
     });
 
     const handleSubmit = useCallback(
         async (event: FormEvent<HTMLFormElement>) => {
             event.preventDefault();
-            post(route('products.comment.store', { product: productId }), {
+            post(route('products.comment.store', { product }), {
                 preserveScroll: true,
             });
             reset();
         },
-        [post, reset, productId],
+        [post, reset, product],
     );
 
     return (
@@ -28,15 +28,15 @@ export default function NewComments({ productId }: NewCommentsProps) {
             {/* Star Rating Field */}
             <div className="flex min-w-[90px] flex-shrink-0 flex-col">
                 <div className="mb-1.5 flex items-center gap-2">
-                    <label htmlFor="star" className="text-sm font-medium text-zinc-700">
+                    <label htmlFor="rating" className="text-sm font-medium text-zinc-700">
                         評分
                     </label>
-                    {errors.star && <div className="text-xs whitespace-nowrap text-red-600">{errors.star}</div>}
+                    {errors.rating && <div className="text-xs whitespace-nowrap text-red-600">{errors.rating}</div>}
                 </div>
                 <input
-                    id="star"
-                    value={data.star}
-                    onChange={(e) => setData('star', Number(e.target.value))}
+                    id="rating"
+                    value={data.rating}
+                    onChange={(e) => setData('rating', Number(e.target.value))}
                     type="number"
                     min="1"
                     max="5"

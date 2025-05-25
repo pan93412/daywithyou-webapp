@@ -51,18 +51,20 @@ class ProductController extends Controller
     public function storeComment(Request $request, Product $product)
     {
         $user = $request->user();
+        if (!$user) {
+            return to_route('login');
+        }
+
         $input = $request->validate([
             'content' => ['required', 'string', 'min:5', 'max:512'],
-            'star' => ['required', 'numeric', 'min:1', 'max:5'],
+            'rating' => ['required', 'numeric', 'min:1', 'max:5'],
         ]);
 
         Comment::create([
             'content' => $input['content'],
-            'star' => (int) $input['star'],
+            'rating' => (int) $input['rating'],
             'product_id' => $product->id,
             'user_id' => $user->id,
         ]);
-
-        return to_route('products.show', ['product' => $product->id]);
     }
 }

@@ -9,13 +9,13 @@ export interface ProductCardProps {
     name: string;
     summary: string;
     price: string;
-    id: number;
+    slug: string;
 }
 
-export default function ProductCard({ figure, alt, name, summary, price, id }: ProductCardProps) {
+export default function ProductCard({ figure, alt, name, summary, price, slug }: ProductCardProps) {
     const handleAddToCart = useCallback(async () => {
         router.post(
-            route('inertia-product-cart.store', { product: id }),
+            route('carts.increment', { product: slug }),
             {
                 quantity: 1,
             },
@@ -25,7 +25,7 @@ export default function ProductCard({ figure, alt, name, summary, price, id }: P
         );
 
         toast.info('已加入購物車');
-    }, [id]);
+    }, [slug]);
 
     return (
         <div className="flex flex-col items-center rounded-lg bg-white p-6 shadow-md">
@@ -37,7 +37,7 @@ export default function ProductCard({ figure, alt, name, summary, price, id }: P
                 </div>
                 <div className="text-primary mb-3 text-lg font-bold">NT${price}</div>
                 <div className="flex gap-2">
-                    <Link href={`/products/${id}`}>
+                    <Link href={route('products.show', { product: slug })}>
                         <Button variant="outline" className="flex-1">
                             查看商品
                         </Button>

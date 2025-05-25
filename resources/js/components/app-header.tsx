@@ -19,7 +19,7 @@ const navbarItems = [
     },
     {
         name: '最新消息',
-        href: route('inertia-news.index'),
+        href: route('news.index'),
     },
     {
         name: '關於我們',
@@ -40,7 +40,7 @@ export function AppHeader({ title }: AppHeaderProps) {
     const cartCount = Object.keys(cart).length;
 
     const handleClearCarts = () => {
-        router.post(route('inertia-product-cart.clear'), undefined, {
+        router.post(route('carts.clear'), undefined, {
             onSuccess: () => {
                 toast.info('已清空購物車');
             },

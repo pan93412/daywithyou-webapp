@@ -13,13 +13,13 @@ export const HotProductsSection: React.FC<HotProductsSectionProps> = ({ productI
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
                 {productIndexes.map((productIndex) => (
                     <ProductCard
-                        key={productIndex.id}
+                        key={productIndex.slug}
                         figure={productIndex.figure}
                         alt={productIndex.name}
                         name={productIndex.name}
                         summary={productIndex.summary}
                         price={productIndex.price}
-                        id={productIndex.id}
+                        slug={productIndex.slug}
                     />
                 ))}
             </div>

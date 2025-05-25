@@ -1,6 +1,7 @@
 import { AppHeader } from '@/components/app-header';
 import ProductCard from '@/components/product-card';
 import { Data, ProductIndex } from '@/types/resource';
+import { AppContent } from '@/components/app-content';
 
 interface Props {
     hotProductsData: Data<ProductIndex[]>;
@@ -8,7 +9,7 @@ interface Props {
 
 export default function Home({ hotProductsData }: Props) {
     return (
-        <div className="flex min-h-screen flex-col bg-zinc-50">
+        <AppContent>
             <AppHeader title="首頁" />
 
             {/* 熱門商品區塊 */}
@@ -28,6 +29,6 @@ export default function Home({ hotProductsData }: Props) {
                     ))}
                 </div>
             </main>
-        </div>
+        </AppContent>
     );
 }

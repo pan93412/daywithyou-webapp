@@ -6,6 +6,7 @@ import { ArrowLeft } from 'lucide-react';
 import ProductComments, { ProductCommentsSkeleton } from '@/components/products/comments';
 import NewComments from '@/components/products/new-comments';
 import { Deferred } from '@inertiajs/react';
+import { AppContent } from '@/components/app-content';
 
 interface Props {
     productData: Data<Product>,
@@ -16,7 +17,7 @@ export default function ProductDetails({ productData, commentsData }: Props) {
     const { image, name, price, description } = productData.data;
 
     return (
-        <div className="flex min-h-screen flex-col bg-zinc-50">
+        <AppContent>
             <AppHeader title={name} />
             <main className="flex-1 w-full max-w-4xl mx-auto py-8 px-4">
                 {/* Back to Product List Button */}
@@ -61,6 +62,6 @@ export default function ProductDetails({ productData, commentsData }: Props) {
                     </Deferred>
                 </section>
             </main>
-        </div>
+        </AppContent>
     );
 }

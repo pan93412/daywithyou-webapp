@@ -78,7 +78,7 @@ export default function ProductDetails({ productReply, commentsReply }: Props) {
                     <div className="mb-4">
                         <NewComments productId={productReply.data.id} />
                     </div>
-                    <Deferred fallback={<ProductCommentsSkeleton />} data="commentsData">
+                    <Deferred fallback={<ProductCommentsSkeleton />} data="commentsReply">
                         <ProductComments comments={commentsReply?.data ?? []} />
                     </Deferred>
                 </section>

@@ -22,10 +22,10 @@ class ProductController extends Controller
             $products = Product::paginate(6);
         }
 
-        $data = ProductIndexResource::collection($products);
+        $productsReply = ProductIndexResource::collection($products);
 
         return Inertia::render('products/index', [
-            'reply' => $data,
+            'productsReply' => $productsReply,
             'query' => $query,
         ]);
     }
@@ -33,11 +33,11 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $productReply = ProductResource::make($product);
-        $commentReply = Inertia::defer(fn () => $this->getCommentsData($product));
+        $commentsReply = Inertia::defer(fn () => $this->getCommentsData($product));
 
         return Inertia::render('products/show', [
             'productReply' => $productReply,
-            'commentReply' => $commentReply,
+            'commentsReply' => $commentsReply,
         ]);
     }
 

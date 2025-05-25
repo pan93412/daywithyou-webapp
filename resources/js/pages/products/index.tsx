@@ -6,10 +6,10 @@ import { Link } from '@inertiajs/react';
 
 interface Props {
     query?: string;
-    reply: PaginatedData<ProductIndex[]>;
+    productsReply: PaginatedData<ProductIndex[]>;
 }
 
-export default function ProductsList({ query, reply }: Props) {
+export default function ProductsList({ query, productsReply }: Props) {
     const title = query ? `「${query}」的搜尋結果` : '商品列表';
 
     return (
@@ -19,7 +19,7 @@ export default function ProductsList({ query, reply }: Props) {
 
                 {/* Products Grid */}
                 <div className="mb-8 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
-                    {reply.data.map((product) => (
+                    {productsReply.data.map((product) => (
                         <ProductCard
                             key={product.id}
                             figure={product.figure}
@@ -33,9 +33,9 @@ export default function ProductsList({ query, reply }: Props) {
                 </div>
 
                 {/* Pagination Controls */}
-                {reply.meta.last_page > 1 && (
+                {productsReply.meta.last_page > 1 && (
                     <div className="mt-8 flex items-center justify-center gap-2">
-                        {reply.meta.links.map((link, index) =>
+                        {productsReply.meta.links.map((link, index) =>
                             link.url ? (
                                 <Link key={index} href={link.url}>
                                     <Button variant={link.active ? 'default' : 'outline'} size="sm" className="min-w-[2.5rem]">
@@ -52,7 +52,7 @@ export default function ProductsList({ query, reply }: Props) {
                 )}
 
                 <div className="mt-4 text-center text-sm text-gray-500">
-                    顯示 {reply.meta.from} 至 {reply.meta.to} 筆，共 {reply.meta.total} 筆商品
+                    顯示 {productsReply.meta.from} 至 {productsReply.meta.to} 筆，共 {productsReply.meta.total} 筆商品
                 </div>
             </main>
         </AppMainLayout>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ProductIndexResource;
 use App\Models\Product;
+use App\Models\Subscriber;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class InertiaHomeController extends Controller
@@ -62,5 +64,14 @@ class InertiaHomeController extends Controller
             'newsItems' => $newsItems,
             'testimonials' => $testimonials,
         ]);
+    }
+
+    public function subscribe(Request $request)
+    {
+        $input = $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        Subscriber::firstOrCreate($input);
     }
 }

@@ -1,5 +1,6 @@
 import { useForm } from '@inertiajs/react';
 import { FormEvent, useCallback } from 'react';
+import { route } from 'ziggy-js';
 
 export interface NewCommentsProps {
     productId: number
@@ -13,8 +14,11 @@ export default function NewComments({ productId }: NewCommentsProps) {
 
     const handleSubmit = useCallback(async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        post(`/products/${productId}/new-comment`);
+        post(route("products.comment.store", { product: productId }), {
+            preserveScroll: true,
+        });
         reset();
+
     }, [post, reset, productId]);
 
     return (

@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Comment, Data, Product } from '@/types/resource';
 import { AppHeader } from '@/components/app-header';
 import { ArrowLeft } from 'lucide-react';
-import ProductComments from '@/components/products/comments';
+import ProductComments, { ProductCommentsSkeleton } from '@/components/products/comments';
 import NewComments from '@/components/products/new-comments';
 import { Deferred } from '@inertiajs/react';
 
@@ -37,7 +37,7 @@ export default function ProductDetails({ productData, commentsData }: Props) {
                     </div>
                     <div className="flex flex-col gap-4 md:w-1/2">
                         <h1 className="text-2xl font-bold mb-2">{name}</h1>
-                        <div className="text-emerald-600 text-xl font-semibold mb-2">${price}</div>
+                        <div className="text-emerald-600 text-xl font-semibold mb-2">NT${price}</div>
                         <p className="text-zinc-700 mb-4 whitespace-pre-line">{description}</p>
                         <div className="flex items-center gap-2 mb-4">
                             <span>數量：</span>
@@ -56,8 +56,8 @@ export default function ProductDetails({ productData, commentsData }: Props) {
                     <div className="mb-4">
                         <NewComments productId={productData.data.id} />
                     </div>
-                    <Deferred fallback={<span className="text-zinc-600">正在取回評價……</span>} data="commentsData">
-                        <ProductComments comments={commentsData?.data} />
+                    <Deferred fallback={<ProductCommentsSkeleton />} data="commentsData">
+                        <ProductComments comments={commentsData?.data ?? []} />
                     </Deferred>
                 </section>
             </main>

@@ -11,7 +11,7 @@ class InertiaHomeController extends Controller
     public function index()
     {
         $hotProductsData = ProductIndexResource::collection(
-            Product::all()
+            Product::limit(3)->get()
         );
 
         return Inertia::render('home', [

@@ -22,10 +22,10 @@ export default function ProductsList({ query, reply }: Props) {
                     {reply.data.map((product) => (
                         <ProductCard
                             key={product.id}
-                            image={product.image}
+                            figure={product.figure}
                             alt={product.name}
                             name={product.name}
-                            description={product.description}
+                            summary={product.summary}
                             price={product.price}
                             id={product.id}
                         />

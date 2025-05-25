@@ -1,3 +1,4 @@
+import { formatRating } from '@/lib/utils';
 import { Comment } from '@/types/resource';
 
 export function ProductCommentsSkeleton() {
@@ -34,7 +35,7 @@ export interface ProductCommentsProps {
 
 export default function ProductComments({ comments }: ProductCommentsProps) {
     const totalComments = comments.length;
-    const averageRating = comments.reduce((total, comment) => total + comment.star, 0) / totalComments;
+    const averageRating = comments.reduce((total, comment) => total + comment.rating, 0) / totalComments;
 
     if (totalComments === 0) {
         return (
@@ -47,7 +48,7 @@ export default function ProductComments({ comments }: ProductCommentsProps) {
     return (
         <>
             <div className="mb-2 flex items-center gap-2">
-                <span className="text-xl text-yellow-500">{renderStar(averageRating)}</span>
+                <span className="text-xl text-yellow-500">{formatRating(averageRating)}</span>
                 <span className="text-sm text-zinc-600">
                     {averageRating} / 5.0 ({totalComments} 則評價)
                 </span>
@@ -55,14 +56,10 @@ export default function ProductComments({ comments }: ProductCommentsProps) {
             {comments.map((comment) => (
                 <div key={comment.id} className="mb-6">
                     <p className="font-medium text-zinc-800">{comment.user.name}</p>
-                    <div className="text-base text-yellow-500">{renderStar(comment.star)}</div>
+                    <div className="text-base text-yellow-500">{formatRating(comment.rating)}</div>
                     <p className="text-sm text-zinc-600">{comment.content}</p>
                 </div>
             ))}
         </>
     );
-}
-
-function renderStar(rating: number): string {
-    return '★'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
 }

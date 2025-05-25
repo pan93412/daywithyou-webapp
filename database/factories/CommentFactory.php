@@ -16,7 +16,7 @@ class CommentFactory extends Factory
     {
         return [
             'content' => $this->faker->word(),
-            'star' => $this->faker->randomNumber(),
+            'rating' => rand(1, 5),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
 

@@ -1,22 +1,41 @@
 <?php
 
-use App\Http\Controllers\InertiaHomeController;
-use App\Http\Controllers\InertiaNewsController;
-use App\Http\Controllers\InertiaProductCartController;
-use App\Http\Controllers\InertiaProductController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', [InertiaHomeController::class, 'index'])->name('home');
-Route::post('/newsletter/subscribe', [InertiaHomeController::class, 'subscribe'])->name('home.subscribe');
-Route::get('/products', [InertiaProductController::class, 'index'])->name('products.index');
-Route::get('/products/{product}', [InertiaProductController::class, 'show'])->name('products.show');
-Route::post('/products/{product}/new-comment', [InertiaProductController::class, 'store'])->name('products.comment.store');
-Route::post('/products/{product}/add-to-cart', [InertiaProductCartController::class, 'store'])->name('inertia-product-cart.store');
-Route::get('/news', [InertiaNewsController::class, 'index'])->name('inertia-news.index');
-Route::get('/news/{slug}', [InertiaNewsController::class, 'show'])->name('inertia-news.show');
-Route::get('/carts', [InertiaProductCartController::class, 'index'])->name('inertia-product-cart.index');
-Route::post('/carts/clear', [InertiaProductCartController::class, 'clear'])->name('inertia-product-cart.clear');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::post('/newsletter/subscribe', [HomeController::class, 'subscribe'])->name('home.subscribe');
+
+Route::prefix('/products')->name('products.')->group(function () {
+    Route::get('/', [ProductController::class, 'index'])->name('index');
+    Route::get('/{product:slug}', [ProductController::class, 'show'])->name('show');
+    Route::post('/{product:slug}/new-comment', [ProductController::class, 'storeComment'])->name('comment.store');
+    Route::post('/{product:slug}/add-to-cart', [CartController::class, 'store'])->name('cart.store');
+});
+
+Route::prefix('/news')->name('news.')->group(function () {
+    Route::get('/', [NewsController::class, 'index'])->name('index');
+    Route::get('/{news:slug}', [NewsController::class, 'show'])->name('show');
+});
+
+Route::prefix('/carts')->name('carts.')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('index');
+    Route::post('/{product:slug}/remove', [CartController::class, 'remove'])->name('remove');
+    Route::post('/clear', [CartController::class, 'clear'])->name('clear');
+});
+
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+Route::post('/products/{product}/new-comment', [ProductController::class, 'storeComment'])->name('products.comment.store');
+Route::post('/products/{product}/add-to-cart', [CartController::class, 'store'])->name('inertia-product-cart.store');
+Route::get('/news', [NewsController::class, 'index'])->name('inertia-news.index');
+Route::get('/news/{slug}', [NewsController::class, 'show'])->name('inertia-news.show');
+Route::get('/carts', [CartController::class, 'index'])->name('inertia-product-cart.index');
+Route::post('/carts/clear', [CartController::class, 'clear'])->name('inertia-product-cart.clear');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {

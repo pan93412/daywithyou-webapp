@@ -5,10 +5,10 @@ import { NewsIndex, PaginatedData } from '@/types/resource';
 import { Link } from '@inertiajs/react';
 
 interface Props {
-    paginatedNewsData: PaginatedData<NewsIndex[]>;
+    newsReply: PaginatedData<NewsIndex[]>;
 }
 
-export default function NewsList({ paginatedNewsData }: Props) {
+export default function NewsList({ newsReply }: Props) {
     return (
         <AppMainLayout title="最新消息與活動">
             <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
@@ -16,15 +16,15 @@ export default function NewsList({ paginatedNewsData }: Props) {
 
                 {/* News Grid */}
                 <div className="mb-8 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
-                    {paginatedNewsData.data.map((news) => (
+                    {newsReply.data.map((news) => (
                         <NewsCard key={news.slug} title={news.title} summary={news.summary} slug={news.slug} created_at={news.created_at} />
                     ))}
                 </div>
 
                 {/* Pagination Controls */}
-                {paginatedNewsData.meta.last_page > 1 && (
+                {newsReply.meta.last_page > 1 && (
                     <div className="mt-8 flex items-center justify-center gap-2">
-                        {paginatedNewsData.meta.links.map((link, index) =>
+                        {newsReply.meta.links.map((link, index) =>
                             link.url ? (
                                 <Link key={index} href={link.url}>
                                     <Button variant={link.active ? 'default' : 'outline'} size="sm" className="min-w-[2.5rem]">
@@ -41,7 +41,7 @@ export default function NewsList({ paginatedNewsData }: Props) {
                 )}
 
                 <div className="mt-4 text-center text-sm text-gray-500">
-                    顯示 {paginatedNewsData.meta.from} 至 {paginatedNewsData.meta.to} 筆，共 {paginatedNewsData.meta.total} 筆消息
+                    顯示 {newsReply.meta.from} 至 {newsReply.meta.to} 筆，共 {newsReply.meta.total} 筆消息
                 </div>
             </main>
         </AppMainLayout>

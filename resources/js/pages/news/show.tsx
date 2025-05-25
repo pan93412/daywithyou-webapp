@@ -4,11 +4,11 @@ import { Data, News } from '@/types/resource';
 import { ArrowLeft } from 'lucide-react';
 
 interface Props {
-    newsData: Data<News>;
+    newsReply: Data<News>;
 }
 
-export default function NewsDetails({ newsData }: Props) {
-    const { title, content, created_at, updated_at } = newsData.data;
+export default function NewsDetails({ newsReply }: Props) {
+    const { title, content, created_at, updated_at } = newsReply.data;
 
     return (
         <AppMainLayout title={title}>

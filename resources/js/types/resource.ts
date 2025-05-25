@@ -28,9 +28,9 @@ export interface PaginatedData<T> extends Data<T> {
 export interface ProductIndex {
     id: number;
     name: string;
-    description: string;
+    summary: string;
     price: string;
-    image: string;
+    figure: string;
 }
 
 export interface Product {
@@ -38,9 +38,9 @@ export interface Product {
     name: string;
     description: string;
     price: string;
-    image: string;
-    createdAt: Date;
-    updatedAt: Date;
+    figure: string;
+    created_at: Date;
+    updated_at: Date;
 }
 
 export interface User {
@@ -52,7 +52,7 @@ export interface User {
 export interface Comment {
     id: number;
     content: string;
-    star: number;
+    rating: number;
     user: User;
 }
 

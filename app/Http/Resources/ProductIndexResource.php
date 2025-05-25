@@ -14,12 +14,11 @@ class ProductIndexResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            // description 的 index 限制最多 50 個字
-            'description' => mb_strlen($this->description) > 100
+            'summary' => mb_strlen($this->description) > 100
                 ? mb_substr($this->description, 0, 50).'……'
                 : $this->description,
             'price' => $this->price,
-            'image' => $this->image,
+            'figure' => $this->figure,
         ];
     }
 }

@@ -4,15 +4,15 @@ import { useCallback } from 'react';
 import { toast } from 'sonner';
 
 export interface ProductCardProps {
-    image: string;
+    figure: string;
     alt: string;
     name: string;
-    description: string;
+    summary: string;
     price: string;
     id: number;
 }
 
-export default function ProductCard({ image, alt, name, description, price, id }: ProductCardProps) {
+export default function ProductCard({ figure, alt, name, summary, price, id }: ProductCardProps) {
     const handleAddToCart = useCallback(async () => {
         router.post(
             route('inertia-product-cart.store', { product: id }),
@@ -29,11 +29,11 @@ export default function ProductCard({ image, alt, name, description, price, id }
 
     return (
         <div className="flex flex-col items-center rounded-lg bg-white p-6 shadow-md">
-            <img src={image} alt={alt} className="mb-4 h-32 object-contain" />
+            <img src={figure} alt={alt} className="mb-4 h-32 object-contain" />
             <div className="flex w-full flex-1 flex-col justify-between">
                 <div>
                     <h3 className="mb-1 text-lg font-semibold">{name}</h3>
-                    <p className="mb-2 text-sm text-zinc-500">{description}</p>
+                    <p className="mb-2 text-sm text-zinc-500">{summary}</p>
                 </div>
                 <div className="text-primary mb-3 text-lg font-bold">NT${price}</div>
                 <div className="flex gap-2">

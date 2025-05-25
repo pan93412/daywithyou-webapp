@@ -7,25 +7,23 @@ use App\Http\Resources\NewsResource;
 use App\Models\News;
 use Inertia\Inertia;
 
-class InertiaNewsController extends Controller
+class NewsController extends Controller
 {
     public function index()
     {
-        $paginatedNewsData = NewsIndexResource::collection(
+        $newsReply = NewsIndexResource::collection(
             News::paginate(6)
         );
 
         return Inertia::render('news/index', [
-            'paginatedNewsData' => $paginatedNewsData,
+            'newsReply' => $newsReply,
         ]);
     }
 
-    public function show(string $slug)
+    public function show(News $news)
     {
-        $news = News::where('slug', $slug)->firstOrFail();
-
         return Inertia::render('news/show', [
-            'newsData' => NewsResource::make($news),
+            'newsReply' => NewsResource::make($news),
         ]);
     }
 }

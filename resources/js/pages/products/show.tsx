@@ -10,17 +10,17 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 interface Props {
-    productData: Data<Product>;
-    commentsData?: Data<Comment[]>;
+    productReply: Data<Product>;
+    commentsReply?: Data<Comment[]>;
 }
 
-export default function ProductDetails({ productData, commentsData }: Props) {
-    const { image, name, price, description } = productData.data;
+export default function ProductDetails({ productReply, commentsReply }: Props) {
+    const { figure, name, price, description } = productReply.data;
     const [quantity, setQuantity] = useState(1);
 
     const handleAddToCart = () => {
         router.post(
-            route('inertia-product-cart.store', { product: productData.data.id }),
+            route('inertia-product-cart.store', { product: productReply.data.id }),
             {
                 quantity,
             },
@@ -51,7 +51,7 @@ export default function ProductDetails({ productData, commentsData }: Props) {
                 </button>
                 <div className="flex flex-col gap-8 rounded-xl bg-white p-8 shadow-lg md:flex-row">
                     <div className="flex flex-shrink-0 items-center justify-center md:w-1/2">
-                        <img src={image} alt={name} className="max-h-72 w-full rounded-lg border object-contain" />
+                        <img src={figure} alt={name} className="max-h-72 w-full rounded-lg border object-contain" />
                     </div>
                     <div className="flex flex-col gap-4 md:w-1/2">
                         <h1 className="mb-2 text-2xl font-bold">{name}</h1>
@@ -76,10 +76,10 @@ export default function ProductDetails({ productData, commentsData }: Props) {
                 <section className="mt-10 px-2">
                     <h2 className="mb-3 text-lg font-semibold">商品評價</h2>
                     <div className="mb-4">
-                        <NewComments productId={productData.data.id} />
+                        <NewComments productId={productReply.data.id} />
                     </div>
                     <Deferred fallback={<ProductCommentsSkeleton />} data="commentsData">
-                        <ProductComments comments={commentsData?.data ?? []} />
+                        <ProductComments comments={commentsReply?.data ?? []} />
                     </Deferred>
                 </section>
             </main>

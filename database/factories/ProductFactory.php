@@ -12,11 +12,14 @@ class ProductFactory extends Factory
 
     public function definition(): array
     {
+        $productFigureIndex = rand(1, 7);
+
         return [
             'name' => $this->faker->name(),
             'description' => $this->faker->text(),
-            'price' => $this->faker->randomFloat(),
-            'image' => $this->faker->word(),
+            'slug' => $this->faker->slug(),
+            'price' => $this->faker->randomFloat(2, max: 1000),
+            'figure' => "https://daywithyou-cdn.pan93.com/product{$productFigureIndex}.jpg",
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

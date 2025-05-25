@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Services\CartService;
 
-class InertiaProductCartController extends Controller
+class CartController extends Controller
 {
     protected CartService $cartService;
 
@@ -16,7 +16,7 @@ class InertiaProductCartController extends Controller
 
     public function index()
     {
-        return response()->json($this->cartService->getContents());
+        return response()->json($this->cartService->list());
     }
 
     public function store(Product $product)
@@ -25,7 +25,20 @@ class InertiaProductCartController extends Controller
             'quantity' => ['required', 'numeric', 'min:1', 'max:100'],
         ]);
 
-        $this->cartService->addItem($product, $input);
+        $currentState = $this->cartService->get($product);
+
+        if ($currentState->quantity + $input['quantity'] > 100) {
+            return;  // do not add more than 100
+        }
+
+        $newState = clone $currentState;
+        $newState->quantity += $input['quantity'];
+        $this->cartService->set($product, $newState);
+    }
+
+    public function remove(Product $product)
+    {
+        $this->cartService->delete($product);
     }
 
     public function clear()

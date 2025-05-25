@@ -9,11 +9,11 @@ use App\Models\Subscriber;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class InertiaHomeController extends Controller
+class HomeController extends Controller
 {
     public function index()
     {
-        $hotProductsData = ProductIndexResource::collection(
+        $hotProductsReply = ProductIndexResource::collection(
             Product::limit(3)->get()
         );
 
@@ -42,7 +42,7 @@ class InertiaHomeController extends Controller
         ];
 
         return Inertia::render('home', [
-            'hotProductsData' => $hotProductsData,
+            'hotProductsReply' => $hotProductsReply,
             'newsItems' => Inertia::defer(fn () => News::limit(5)
                 ->orderBy('id', 'desc')
                 ->select(['slug', 'title'])

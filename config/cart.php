@@ -7,7 +7,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | This option controls the default cart storage driver that will be used
-    | for storing cart items. Supported drivers: "session", "redis".
+    | for storing cart items. Supported drivers: "redis".
     |
     */
     'driver' => env('CART_DRIVER', 'redis'),

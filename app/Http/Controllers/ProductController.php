@@ -10,7 +10,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class InertiaProductController extends Controller
+class ProductController extends Controller
 {
     public function index(Request $request)
     {
@@ -32,19 +32,12 @@ class InertiaProductController extends Controller
 
     public function show(Product $product)
     {
-        $productData = ProductResource::make($product);
+        $productReply = ProductResource::make($product);
+        $commentReply = Inertia::defer(fn () => $this->getCommentsData($product));
 
         return Inertia::render('products/show', [
-            'productData' => $productData,
-            'commentsData' => Inertia::defer(fn () => $this->getCommentsData($product)),
-        ]);
-    }
-
-    public function addToCert(Product $product)
-    {
-        // write current product to session
-        session([
-            'cert' => [...session('cert', []), $product->id],
+            'productReply' => $productReply,
+            'commentReply' => $commentReply,
         ]);
     }
 
@@ -55,7 +48,7 @@ class InertiaProductController extends Controller
         );
     }
 
-    public function store(Request $request, Product $product)
+    public function storeComment(Request $request, Product $product)
     {
         $user = $request->user();
         $input = $request->validate([

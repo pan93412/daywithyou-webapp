@@ -9,7 +9,17 @@
 
   # https://devenv.sh/languages/
   languages.php.enable = true;
-  languages.php.version = "8.4";
+  languages.php.package =
+    pkgs.php84.buildEnv {
+      extensions = { all, enabled }: with all; enabled ++ [
+        xdebug
+        redis
+      ];
+      extraConfig = ''
+        xdebug.mode = debug
+        memory_limit=1G
+      '';
+    };
 
   # https://devenv.sh/processes/
   # processes.cargo-watch.exec = "cargo-watch";

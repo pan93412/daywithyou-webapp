@@ -3,167 +3,66 @@
 namespace App\Services;
 
 use App\Models\Product;
+use App\Models\State\CartState;
 use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Session;
 
 class CartService
 {
     // Default storage driver
     protected string $driver;
 
-    // User identifier
-    protected string $userIdentifier;
-
-    // Cart key prefix
-    protected string $prefix = 'cart:';
-
     /**
      * Create a new cart service instance.
      *
-     * @param  string|null  $driver  The storage driver to use (session, redis)
-     * @param  string|null  $userIdentifier  The user identifier (session id or user id)
+     * @param  string|null  $driver  The storage driver to use (redis)
      */
-    public function __construct(?string $driver = null, ?string $userIdentifier = null)
+    public function __construct(?string $driver = null)
     {
         $this->driver = $driver ?? config('cart.driver', 'redis');
-        $this->userIdentifier = $userIdentifier ?? $this->resolveUserIdentifier();
     }
 
-    /**
-     * Get the cart contents.
-     */
-    public function getContents(): array
+    public function storage(): CartStateStorage
     {
-        return $this->driver === 'redis'
-            ? $this->getRedisContents()
-            : $this->getSessionContents();
+        $expiration = config('cart.expiration', 7 * 24 * 60 * 60);
+
+        return match ($this->driver) {
+            'redis' => new RedisCartStateStorage($this->getUserIdentifier(), $expiration),
+            default => throw new \InvalidArgumentException('Invalid cart storage driver: '.$this->driver),
+        };
     }
 
     /**
-     * Add an item to the cart.
+     * @return array<string, CartState>
      */
-    public function addItem(Product $product, array $data): void
+    public function list(): array
     {
-        if ($this->driver === 'redis') {
-            $this->addRedisItem($product, $data);
-        } else {
-            $this->addSessionItem($product, $data);
-        }
+        return $this->storage()->list();
     }
 
-    /**
-     * Clear the cart.
-     */
+    public function get(Product $product): CartState
+    {
+        return $this->storage()->get($product);
+    }
+
+    public function set(Product $product, CartState $data): void
+    {
+        $this->storage()->set($product, $data);
+    }
+
+    public function delete(Product $product): void
+    {
+        $this->storage()->delete($product);
+    }
+
     public function clear(): void
     {
-        if ($this->driver === 'redis') {
-            $this->clearRedis();
-        } else {
-            $this->clearSession();
-        }
+        $this->storage()->clear();
     }
 
-    /**
-     * Get the cart contents from session.
-     */
-    protected function getSessionContents(): array
+    private function getUserIdentifier(): string
     {
-        return Session::get('cart', []);
-    }
-
-    /**
-     * Add an item to the session cart.
-     */
-    protected function addSessionItem(Product $product, array $data): void
-    {
-        $currentCart = Session::get('cart', []);
-        $currentProductInfo = $currentCart[$product->id] ?? ['quantity' => 0];
-
-        Session::put(
-            'cart', [
-                ...$currentCart,
-                $product->id => [
-                    ...$currentProductInfo,
-                    'quantity' => $currentProductInfo['quantity'] + $data['quantity'],
-                ],
-            ],
-        );
-    }
-
-    /**
-     * Clear the session cart.
-     */
-    protected function clearSession(): void
-    {
-        Session::forget('cart');
-    }
-
-    /**
-     * Get the cart contents from Redis.
-     */
-    protected function getRedisContents(): array
-    {
-        $cartData = Redis::hgetall($this->getCartKey());
-
-        if (empty($cartData)) {
-            return [];
-        }
-
-        // Convert Redis hash to the expected format
-        return array_map(function ($data) {
-            return json_decode($data, true);
-        }, $cartData);
-    }
-
-    /**
-     * Add an item to the Redis cart.
-     */
-    protected function addRedisItem(Product $product, array $data): void
-    {
-        $currentCart = $this->getRedisContents();
-
-        $currentProductInfo = $currentCart[$product->id] ?? ['quantity' => 0];
-        $newProductInfo = [
-            ...$currentProductInfo,
-            'quantity' => $currentProductInfo['quantity'] + $data['quantity'],
-        ];
-
-        Redis::hset(
-            $this->getCartKey(),
-            $product->id,
-            json_encode($newProductInfo),
-        );
-
-        // Set expiration time (e.g., 7 days)
-        Redis::expire($this->getCartKey(), config('cart.expiration', 60 * 60 * 24 * 7));
-    }
-
-    /**
-     * Clear the Redis cart.
-     */
-    protected function clearRedis(): void
-    {
-        Redis::del($this->getCartKey());
-    }
-
-    /**
-     * Get the cart key for Redis.
-     */
-    protected function getCartKey(): string
-    {
-        return $this->prefix.$this->userIdentifier;
-    }
-
-    /**
-     * Resolve the user identifier.
-     */
-    protected function resolveUserIdentifier(): string
-    {
-        // Use user ID if authenticated, otherwise use session ID
-        if (auth()->check()) {
-            return 'user:'.auth()->id();
-        }
-
-        return 'guest:'.session()->getId();
+        return auth()->check()
+            ? 'user:'.auth()->id()
+            : 'guest:'.session()->getId();
     }
 }

@@ -2,8 +2,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppMainLayout from '@/layouts/app/app-main-layout';
 import { ProductIndex } from '@/types/resource';
-import { Link, router } from '@inertiajs/react';
-import { ArrowLeft, CreditCard } from 'lucide-react';
+import { Link, router, usePage } from '@inertiajs/react';
+import { ArrowLeft } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { toast } from 'sonner';
 import {
@@ -13,6 +13,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { SharedData } from '@/types';
 
 interface CartItem {
     data: ProductIndex;
@@ -25,16 +26,17 @@ interface Props {
 
 export default function CheckoutPage({ carts }: Props) {
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { auth } = usePage<SharedData>().props;
     const totalPrice = carts.reduce((sum, { data: product, quantity }) => sum + Number(product.price) * quantity, 0);
 
     const [formData, setFormData] = useState({
-        name: '',
-        email: '',
+        name: auth.user.name,
+        email: auth.user.email,
         phone: '',
         address: '',
         city: '',
         zipCode: '',
-        paymentMethod: 'credit_card',
+        paymentMethod: 'cash',
     });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -183,21 +185,12 @@ export default function CheckoutPage({ carts }: Props) {
                                             <SelectValue placeholder="選擇付款方式" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="credit_card">信用卡付款</SelectItem>
+                                            <SelectItem value="cash">現金付款</SelectItem>
                                             <SelectItem value="line_pay">Line Pay</SelectItem>
                                             <SelectItem value="bank_transfer">銀行轉帳</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
-
-                                {formData.paymentMethod === 'credit_card' && (
-                                    <div className="rounded-md border border-zinc-200 bg-zinc-50 p-4">
-                                        <div className="flex items-center gap-2 text-sm text-zinc-600">
-                                            <CreditCard className="h-4 w-4" />
-                                            <span>信用卡資訊將在下一步填寫</span>
-                                        </div>
-                                    </div>
-                                )}
                             </div>
                         </div>
                     </div>

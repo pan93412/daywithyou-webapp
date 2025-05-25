@@ -36,7 +36,7 @@ export default function Home({
                 <AppHeader title="首頁" />
 
                 {/* News Banner */}
-                <Deferred fallback={<NewsBanner news={[]} />} data="newsItems">
+                <Deferred fallback={<></>} data="newsItems">
                     <NewsBanner news={newsItems ?? []} />
                 </Deferred>
 

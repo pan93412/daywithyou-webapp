@@ -3,6 +3,7 @@
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,6 +28,10 @@ Route::prefix('/carts')->name('carts.')->group(function () {
     Route::post('/{product:slug}/increment', [CartController::class, 'increment'])->name('increment');
     Route::delete('/{product:slug}', [CartController::class, 'remove'])->name('remove');
     Route::post('/clear', [CartController::class, 'clear'])->name('clear');
+});
+
+Route::prefix('/orders')->name('orders.')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/confirmation', [OrdersController::class, 'confirmation'])->name('confirmation');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

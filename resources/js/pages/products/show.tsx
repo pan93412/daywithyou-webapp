@@ -4,6 +4,8 @@ import { Product } from '@/types/products';
 import { Data } from '@/types/resource';
 import { AppHeader } from '@/components/app-header';
 import { ArrowLeft } from 'lucide-react';
+import ProductComments from '@/components/products/comments';
+import NewComments from '@/components/products/new-comments';
 
 interface Props {
     productData: Data<Product>,
@@ -50,25 +52,10 @@ export default function ProductDetails({ productData }: Props) {
                 {/* Mock Comment & Rate Area */}
                 <section className="mt-10 px-2">
                     <h2 className="text-lg font-semibold mb-3">商品評價</h2>
-                    <div className="flex items-center gap-2 mb-2">
-                        <span className="text-yellow-500 text-xl">★★★★★</span>
-                        <span className="text-zinc-600 text-sm">4.8 / 5.0 (123 則評價)</span>
+                    <div className="mb-4">
+                        <NewComments productId={productData.data.id} />
                     </div>
-                    <div className="mb-6">
-                        <p className="text-zinc-800 font-medium">使用者A</p>
-                        <div className="text-yellow-500 text-base">★★★★☆</div>
-                        <p className="text-zinc-600 text-sm">商品品質很好，出貨速度快，下次還會再購買！</p>
-                    </div>
-                    <div className="mb-6">
-                        <p className="text-zinc-800 font-medium">使用者B</p>
-                        <div className="text-yellow-500 text-base">★★★★★</div>
-                        <p className="text-zinc-600 text-sm">非常滿意，客服也很親切，推薦！</p>
-                    </div>
-                    <div className="mb-6">
-                        <p className="text-zinc-800 font-medium">使用者C</p>
-                        <div className="text-yellow-500 text-base">★★★★☆</div>
-                        <p className="text-zinc-600 text-sm">整體不錯，但包裝還可以再加強。</p>
-                    </div>
+                    <ProductComments productId={productData.data.id} />
                 </section>
             </main>
         </div>

@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\InertiaHomeController;
 use App\Http\Controllers\InertiaProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', [InertiaProductController::class, 'index'])->name('home');
+Route::get('/', [InertiaHomeController::class, 'index'])->name('home');
+Route::get('/products', [InertiaProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product}', [InertiaProductController::class, 'show'])->name('products.show');
 Route::post('/products/{product}/new-comment', [InertiaProductController::class, 'store'])->name('products.comment.store');
 

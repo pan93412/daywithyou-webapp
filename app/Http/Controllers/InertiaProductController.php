@@ -15,12 +15,12 @@ class InertiaProductController extends Controller
 {
     public function index()
     {
-        $hotProductsData = ProductIndexResource::collection(
-            Product::all()
+        $paginatedProductsData = ProductIndexResource::collection(
+            Product::paginate(5)
         );
 
-        return Inertia::render('home', [
-            'hotProductsData' => $hotProductsData
+        return Inertia::render('products/index', [
+            'paginatedProductsData' => $paginatedProductsData
         ]);
     }
 

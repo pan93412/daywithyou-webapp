@@ -6,6 +6,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import { useCallback } from 'react';
 import { toast } from 'sonner';
+import { PageMessage } from '@/components/page-message';
 
 interface CartItem {
     data: ProductIndex;
@@ -14,10 +15,10 @@ interface CartItem {
 
 interface Props {
     carts: CartItem[];
-    error?: string;
 }
 
-export default function CartPage({ carts, error }: Props) {
+export default function CartPage({ carts }: Props) {
+    const { message } = usePage<SharedData>().props;
     const totalPrice = carts.reduce((sum, { data: product, quantity }) => sum + Number(product.price) * quantity, 0);
 
     return (
@@ -28,11 +29,7 @@ export default function CartPage({ carts, error }: Props) {
                     <p className="text-zinc-500">{carts.length} 件商品</p>
                 </div>
 
-                {error ? (
-                    <div className="mb-6 rounded-xl bg-red-50 p-4">
-                        <p className="text-sm text-red-600">{error}</p>
-                    </div>
-                ) : null}
+                <PageMessage className="mb-4" />
 
                 {carts.length === 0 ? (
                     <EmptyCart />

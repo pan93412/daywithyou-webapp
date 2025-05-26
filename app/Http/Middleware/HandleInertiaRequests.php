@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\State\CartState;
+use App\Models\State\MessageState;
 use App\Services\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -42,12 +44,29 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        // Safely get cart data with error handling
+        /**
+         * @type CartState[] $cart
+         */
         $cart = [];
         try {
             $cart = $this->cartService->list();
         } catch (\Exception $e) {
             Log::error('Error loading cart data: '.$e->getMessage(), [
+                'exception' => $e,
+            ]);
+        }
+
+        /**
+         * @type MessageState|null $messageSession
+         */
+        $messageSession = null;
+        try {
+            $rawMessageSession = session(MessageState::$MESSAGE_SESSION_KEY);
+            if ($rawMessageSession) {
+                $messageSession = MessageState::fromArray($rawMessageSession);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error loading message data: '.$e->getMessage(), [
                 'exception' => $e,
             ]);
         }
@@ -58,6 +77,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'message' => $messageSession?->toArray(),
             'cart' => $cart,
             'ziggy' => fn (): array => [
                 ...(new Ziggy)->toArray(),

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\OrderConfirmationResource;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\State\MessageState;
+use App\Models\State\MessageStateType;
 use App\Services\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,10 +23,13 @@ class OrdersController extends Controller
     {
         // get order ID from the session
         $orderId = session('order');
-        Log::info("confirmation orderId: $orderId");
         if (! $orderId || ! \is_int($orderId)) {
             return to_route('carts.index')->with([
-                'error' => '您尚未執行下單動作。如果下單失敗，請重新操作。',
+                MessageState::$MESSAGE_SESSION_KEY => (new MessageState(
+                    type: MessageStateType::ERROR,
+                    title: '動作有誤',
+                    content: '您尚未執行下單動作。如果下單失敗，請重新操作。',
+                ))->toArray(),
             ]);
         }
 
@@ -44,7 +49,11 @@ class OrdersController extends Controller
 
         if (\count($cartItems) === 0) {
             return to_route('carts.index')->with([
-                'error' => '購物車是空的。',
+                MessageState::$MESSAGE_SESSION_KEY => (new MessageState(
+                    type: MessageStateType::ERROR,
+                    title: '購物車是空的',
+                    content: '請先加入商品至購物車。',
+                ))->toArray(),
             ]);
         }
 
@@ -81,7 +90,11 @@ class OrdersController extends Controller
             Log::error('Failed to create order: '.$e);
 
             return to_route('carts.index')->with([
-                'error' => $e->getMessage(),
+                MessageState::$MESSAGE_SESSION_KEY => (new MessageState(
+                    type: MessageStateType::ERROR,
+                    title: '下單失敗',
+                    content: '請稍後再試。錯誤訊息：'.$e->getMessage(),
+                ))->toArray(),
             ]);
         }
 
@@ -92,5 +105,50 @@ class OrdersController extends Controller
         return to_route('orders.confirmation')->with([
             'order' => $orderId,
         ]);
+    }
+
+    public function cancel(Order $order)
+    {
+        // Check if the order belongs to the authenticated user
+        if ($order->user_id !== auth()->id()) {
+            return back()->with([
+                MessageState::$MESSAGE_SESSION_KEY => (new MessageState(
+                    type: MessageStateType::ERROR,
+                    title: '權限不足',
+                    content: '您沒有權限取消此訂單。',
+                ))->toArray(),
+            ]);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // Log the cancellation
+            Log::info("Cancelling order ID $order->id");
+
+            // Delete the order (this will cascade delete order items due to foreign key constraints)
+            $order->delete();
+
+            DB::commit();
+
+            return to_route('dashboard.orders')->with([
+                MessageState::$MESSAGE_SESSION_KEY => (new MessageState(
+                    type: MessageStateType::DEFAULT,
+                    title: '取消訂單成功',
+                    content: "訂單 #{$order->id} 已成功取消。",
+                ))->toArray(),
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error('Order cancellation failed: ' . $e->getMessage());
+
+            return back()->with([
+                MessageState::$MESSAGE_SESSION_KEY => (new MessageState(
+                    type: MessageStateType::ERROR,
+                    title: '取消訂單失敗',
+                    content: '請稍後再試。錯誤訊息：'.$e->getMessage(),
+                ))->toArray(),
+            ]);
+        }
     }
 }

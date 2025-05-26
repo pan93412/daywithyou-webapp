@@ -1,11 +1,24 @@
 import { Data, Order, OrderItem } from '@/types/resource';
 import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
-import { Calendar, CreditCard, MapPin, Package, Phone, Mail, User, ChevronLeft, Truck, FileText } from 'lucide-react';
+import {
+    Calendar,
+    CreditCard,
+    MapPin,
+    Package,
+    Phone,
+    Mail,
+    User,
+    ChevronLeft,
+    Truck,
+    FileText,
+} from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
 import { formatDate } from '@/lib/utils';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { PageMessage } from '@/components/page-message';
 
 interface Props {
     reply: Data<Order>;
@@ -27,18 +40,50 @@ export default function OrderDetailsPage({ reply, orderItems }: Props) {
     const order = reply.data;
     const items = orderItems.data;
 
+    const handleCancelOrder = () => {
+        router.delete(route('orders.cancel', { order: order.id }));
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`訂單 #${order.id} 詳情`} />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <div className="flex items-center mb-2">
+                <div className="flex items-center justify-between mb-2">
                     <Link href={route('dashboard.orders')}>
                         <Button variant="ghost" size="sm" className="flex items-center gap-1">
                             <ChevronLeft className="h-4 w-4" />
                             返回訂單列表
                         </Button>
                     </Link>
+
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button variant="destructive" size="sm">
+                                取消訂單
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogTitle>確定要取消此訂單嗎？</DialogTitle>
+                            <DialogDescription>
+                                一旦您取消訂單，訂單將被永久刪除。這個動作無法撤銷。
+                            </DialogDescription>
+
+                            <DialogFooter className="gap-2">
+                                <DialogClose asChild>
+                                    <Button variant="secondary">
+                                        取消
+                                    </Button>
+                                </DialogClose>
+
+                                <Button variant="destructive" onClick={handleCancelOrder}>
+                                    確定取消訂單
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                 </div>
+
+                <PageMessage />
 
                 <div className="grid gap-4 md:grid-cols-3">
                     {/* Order Summary Card */}

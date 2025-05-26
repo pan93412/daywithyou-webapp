@@ -28,7 +28,14 @@ export interface SharedData {
     cart: Record<string, { quantity: number }>;
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
+    message?: Message;
     [key: string]: unknown;
+}
+
+export interface Message {
+    type: "error" | "success";
+    title: string;
+    content: string;
 }
 
 export interface User {

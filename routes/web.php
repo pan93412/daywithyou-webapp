@@ -38,6 +38,9 @@ Route::prefix('/orders')->name('orders.')->middleware(['auth', 'verified'])->gro
 
     Route::post('/', [OrdersController::class, 'store'])
         ->name('store');
+
+    Route::delete('/{order}', [OrdersController::class, 'cancel'])
+        ->name('cancel');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

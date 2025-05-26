@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar, CreditCard, Package, User } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
 import { formatDate } from '@/lib/utils';
+import { PageMessage } from '@/components/page-message';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -25,6 +26,8 @@ export default function OrderDashboardPage({reply}: Props) {
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative flex-1 overflow-hidden rounded-xl border bg-white p-6 shadow-sm dark:bg-neutral-900">
                     <h1 className="mb-6 text-2xl font-bold">訂單管理</h1>
+
+                    <PageMessage className="mb-4" />
 
                     {reply.data.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-12 text-center">

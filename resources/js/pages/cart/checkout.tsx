@@ -61,20 +61,6 @@ export default function CheckoutPage({ carts }: Props) {
         });
     };
 
-    if (carts.length === 0) {
-        return (
-            <AppMainLayout title="結帳">
-                <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
-                    <div className="flex flex-col items-center justify-center rounded-xl bg-white p-12 shadow-md">
-                        <h2 className="mb-2 text-xl font-semibold">購物車是空的</h2>
-                        <p className="mb-6 text-center text-zinc-500">請先將商品加入購物車再進行結帳</p>
-                        <Button onClick={() => router.visit(route('products.index'))}>繼續購物</Button>
-                    </div>
-                </main>
-            </AppMainLayout>
-        );
-    }
-
     return (
         <AppMainLayout title="結帳">
             <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8">

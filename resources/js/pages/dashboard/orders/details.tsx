@@ -19,6 +19,7 @@ import { type BreadcrumbItem } from '@/types';
 import { formatDate } from '@/lib/utils';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { PageMessage } from '@/components/page-message';
+import { useCallback, useState } from 'react';
 
 interface Props {
     reply: Data<Order>;
@@ -40,10 +41,6 @@ export default function OrderDetailsPage({ reply, orderItems }: Props) {
     const order = reply.data;
     const items = orderItems.data;
 
-    const handleCancelOrder = () => {
-        router.delete(route('orders.cancel', { order: order.id }));
-    };
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`訂單 #${order.id} 詳情`} />
@@ -56,34 +53,10 @@ export default function OrderDetailsPage({ reply, orderItems }: Props) {
                         </Button>
                     </Link>
 
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button variant="destructive" size="sm">
-                                取消訂單
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogTitle>確定要取消此訂單嗎？</DialogTitle>
-                            <DialogDescription>
-                                一旦您取消訂單，訂單將被永久刪除。這個動作無法撤銷。
-                            </DialogDescription>
-
-                            <DialogFooter className="gap-2">
-                                <DialogClose asChild>
-                                    <Button variant="secondary">
-                                        取消
-                                    </Button>
-                                </DialogClose>
-
-                                <Button variant="destructive" onClick={handleCancelOrder}>
-                                    確定取消訂單
-                                </Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
+                    <CancelButton orderId={order.id} />
                 </div>
 
-                <PageMessage />
+                <PageMessage className="mb-4" />
 
                 <div className="grid gap-4 md:grid-cols-3">
                     {/* Order Summary Card */}
@@ -233,6 +206,50 @@ export default function OrderDetailsPage({ reply, orderItems }: Props) {
                 </div>
             </div>
         </AppLayout>
+    );
+}
+
+function CancelButton({orderId}: {orderId: number}) {
+    const [open, setOpen] = useState(false);
+    const [processing, setProcessing] = useState(false);
+
+    const handleCancelOrder = useCallback(() => {
+        setProcessing(true);
+
+        router.delete(route('orders.cancel', { order: orderId }), {
+            onSuccess: () => {
+                setOpen(false);
+                setProcessing(false);
+            },
+        });
+    }, [orderId]);
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="destructive" size="sm">
+                    取消訂單
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogTitle>確定要取消此訂單嗎？</DialogTitle>
+                <DialogDescription>
+                    一旦您取消訂單，訂單將被永久刪除。這個動作無法撤銷。
+                </DialogDescription>
+
+                <DialogFooter className="gap-2">
+                    <DialogClose asChild>
+                        <Button variant="secondary">
+                            取消
+                        </Button>
+                    </DialogClose>
+
+                    <Button variant="destructive" disabled={processing} onClick={handleCancelOrder}>
+                        確定取消訂單
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 }
 

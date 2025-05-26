@@ -51,7 +51,7 @@ export default function PaymentSuccessfulPage({ reply }: Props) {
                             <Button onClick={() => router.visit(route('products.index'))} className="bg-emerald-600 hover:bg-emerald-700">
                                 繼續購物
                             </Button>
-                            <Button variant="outline" onClick={() => router.visit(route('dashboard'))}>
+                            <Button variant="outline" onClick={() => router.visit(route('dashboard.orders.details', { order: reply.data.id }))}>
                                 查看我的訂單
                             </Button>
                         </div>

@@ -38,6 +38,27 @@ export default function ProductDetails({ productReply, commentsReply }: Props) {
         );
     };
 
+    const handleBuyNow = () => {
+        router.post(
+            route('carts.increment', { product: productReply.data.slug }),
+            {
+                quantity,
+            },
+            {
+                onSuccess: () => {
+                    router.push({
+                        url: route('carts.index'),
+                    });
+                },
+                onError(error) {
+                    for (const value of Object.values(error)) {
+                        toast.error(value);
+                    }
+                },
+            },
+        );
+    }
+
     return (
         <AppMainLayout title={name}>
             <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
@@ -65,7 +86,7 @@ export default function ProductDetails({ productReply, commentsReply }: Props) {
                             <Button className="bg-primary hover:bg-primary/90 flex-1 text-white" onClick={handleAddToCart}>
                                 加入購物車
                             </Button>
-                            <Button className="flex-1" variant="outline">
+                            <Button className="flex-1" variant="outline" onClick={handleBuyNow}>
                                 立刻購買
                             </Button>
                         </div>

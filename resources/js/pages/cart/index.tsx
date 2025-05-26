@@ -52,7 +52,7 @@ export default function CartPage({ carts }: Props) {
 function CartItem({ product, quantity }: { product: ProductIndex; quantity: number }) {
     return (
         <div className="border-b border-zinc-100 py-4 last:border-0">
-            <div className="flex gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
                 <div className="h-24 w-24 flex-shrink-0">
                     <Link href={route('products.show', { slug: product.slug })}>
                         <img
@@ -67,7 +67,7 @@ function CartItem({ product, quantity }: { product: ProductIndex; quantity: numb
                         <h3 className="font-medium">{product.name}</h3>
                         <p className="text-sm text-zinc-500">{product.summary}</p>
                     </div>
-                    <div className="mt-2 flex items-center justify-between">
+                    <div className="mt-2 flex flex-col gap-1 md:gap-0 md:flex-row md:items-center justify-between">
                         <div className="text-primary font-semibold">NT${product.price}</div>
                         <div className="flex items-center gap-4">
                             <CartQuantity product={product.slug} quantity={quantity} />

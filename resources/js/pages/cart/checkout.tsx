@@ -8,6 +8,7 @@ import { Link, router, useForm, usePage } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { toast } from 'sonner';
+import { Textarea } from '@/components/ui/textarea';
 
 interface CartItem {
     data: ProductIndex;
@@ -25,6 +26,7 @@ interface CheckoutForm {
     address: string;
     city: string;
     zipCode: string;
+    note: string;
     paymentMethod: "cash" | "line_pay" | "bank_transfer" | string;
 }
 
@@ -40,6 +42,7 @@ export default function CheckoutPage({ carts }: Props) {
         address: auth.user.address ?? '',
         city: auth.user.city ?? '',
         zipCode: auth.user.zip ?? '',
+        note: '',
         paymentMethod: 'cash',
     });
 
@@ -194,6 +197,22 @@ export default function CheckoutPage({ carts }: Props) {
                                         </SelectContent>
                                     </Select>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-6 rounded-xl bg-white p-6 shadow-md">
+                            <h2 className="mb-4 text-lg font-semibold">訂單備註</h2>
+                            <div>
+                                <label htmlFor="note" className="mb-1 block text-sm font-medium">
+                                    備註
+                                </label>
+                                <Textarea
+                                    id="note"
+                                    name="note"
+                                    value={data.note}
+                                    onChange={(e) => setData('note', e.target.value)}
+                                    placeholder="請輸入備註，可留空"
+                                />
                             </div>
                         </div>
                     </div>

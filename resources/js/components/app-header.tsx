@@ -64,7 +64,7 @@ export function AppHeader({ title }: AppHeaderProps) {
                             </nav>
                         </SheetContent>
                     </Sheet>
-                    <Link href="/" className="flex items-center gap-2">
+                    <Link href={route('home')} className="flex items-center gap-2">
                         <div className="relative h-10 w-10 overflow-hidden rounded-full bg-emerald-500">
                             <AppLogoIcon />
                         </div>

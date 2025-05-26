@@ -41,7 +41,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function OrderDetailsPage({ reply, orderItems }: Props) {
     const order = reply.data;
     const items = orderItems.data;
-    const detailUrl = `${window.location.origin}/dashboard/orders/${order.id}`;
+    const detailUrl = route('dashboard.orders.details', { order: order.id });
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

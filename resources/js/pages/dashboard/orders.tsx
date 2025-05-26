@@ -71,8 +71,8 @@ export default function OrderDashboardPage({reply}: Props) {
                                                     </div>
                                                 </td>
                                                 <td className="whitespace-nowrap py-4 px-4 text-sm">
-                                                    <Link href={`/dashboard/orders/${order.id}`}>
-                                                        <Button variant="outline" size="sm">查看詳情</Button>
+                                                    <Link href={route('dashboard.orders.details', { order: order.id })}>
+                                                        <Button variant="outline" size="sm">檢視訂單</Button>
                                                     </Link>
                                                 </td>
                                             </tr>

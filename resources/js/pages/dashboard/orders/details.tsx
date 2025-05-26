@@ -26,7 +26,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function OrderDetailsPage({ reply, orderItems }: Props) {
     const order = reply.data;
     const items = orderItems.data;
-    
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`訂單 #${order.id} 詳情`} />
@@ -45,7 +45,7 @@ export default function OrderDetailsPage({ reply, orderItems }: Props) {
                     <div className="border-sidebar-border/70 dark:border-sidebar-border relative overflow-hidden rounded-xl border bg-white p-6 shadow-sm dark:bg-neutral-900 md:col-span-2">
                         <div className="flex justify-between items-center mb-6">
                             <h1 className="text-2xl font-bold">訂單 #{order.id}</h1>
-                            <div className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-3 py-1 rounded-full text-sm font-medium">
+                            <div className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200 px-3 py-1 rounded-full text-sm font-medium">
                                 {getPaymentMethodText(order.payment_method)}
                             </div>
                         </div>
@@ -118,7 +118,7 @@ export default function OrderDetailsPage({ reply, orderItems }: Props) {
                             <h2 className="text-lg font-semibold mb-4">訂單時間線</h2>
                             <div className="space-y-4">
                                 <div className="flex">
-                                    <div className="mr-4 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-200">
+                                    <div className="mr-4 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900 dark:text-emerald-200">
                                         <Calendar className="h-5 w-5" />
                                     </div>
                                     <div>

@@ -12,10 +12,12 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $commentCount = Comment::where('user_id', auth()->user()->id)->count();
+        $commentsCount = Comment::where('user_id', auth()->user()->id)->count();
+        $ordersCount = auth()->user()->orders()->count();
 
         return inertia('dashboard', [
-            'commentCount' => $commentCount,
+            'commentsCount' => $commentsCount,
+            'ordersCount' => $ordersCount,
         ]);
     }
 

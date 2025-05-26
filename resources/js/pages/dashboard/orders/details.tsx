@@ -20,6 +20,7 @@ import { formatDate } from '@/lib/utils';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { PageMessage } from '@/components/page-message';
 import { useCallback, useState } from 'react';
+import QRCode from 'react-qr-code';
 
 interface Props {
     reply: Data<Order>;
@@ -40,6 +41,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function OrderDetailsPage({ reply, orderItems }: Props) {
     const order = reply.data;
     const items = orderItems.data;
+    const detailUrl = `${window.location.origin}/dashboard/orders/${order.id}`;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -52,7 +54,6 @@ export default function OrderDetailsPage({ reply, orderItems }: Props) {
                             返回訂單列表
                         </Button>
                     </Link>
-
                     <CancelButton orderId={order.id} />
                 </div>
 
@@ -166,39 +167,51 @@ export default function OrderDetailsPage({ reply, orderItems }: Props) {
                         </div>
                     </div>
 
-                    {/* Customer Information Card */}
-                    <div className="border-sidebar-border/70 dark:border-sidebar-border relative overflow-hidden rounded-xl border bg-white p-6 shadow-sm dark:bg-neutral-900">
-                        <h2 className="text-lg font-semibold mb-4">收件人資訊</h2>
-                        <div className="space-y-4">
-                            <div className="flex">
-                                <User className="mr-3 h-5 w-5 text-neutral-400" />
-                                <div>
-                                    <p className="text-sm font-medium">姓名</p>
-                                    <p className="text-sm text-neutral-600 dark:text-neutral-300">{order.recipient_name}</p>
-                                </div>
+                    {/* Sidebar: 收件人資訊 & QR Code */}
+                    <div className="flex flex-col gap-4">
+                        {/* QR Code Card */}
+                        <div className="border-sidebar-border/70 dark:border-sidebar-border relative overflow-hidden rounded-xl border bg-white p-6 shadow-sm dark:bg-neutral-900">
+                            <h2 className="text-lg font-semibold mb-2 text-neutral-900 dark:text-neutral-100">現場驗證 QR Code</h2>
+                            <div className="text-sm text-neutral-600 dark:text-neutral-300 mb-4">讓工作人員可以在場檢查您購買的項目，並給予通行。</div>
+                            <div className="flex flex-col items-center justify-center">
+                                <QRCode value={detailUrl} size={144} bgColor="white" fgColor="#059669" style={{ background: 'white', borderRadius: 8, padding: 8 }} />
                             </div>
-                            <div className="flex">
-                                <Mail className="mr-3 h-5 w-5 text-neutral-400" />
-                                <div>
-                                    <p className="text-sm font-medium">電子郵件</p>
-                                    <p className="text-sm text-neutral-600 dark:text-neutral-300">{order.recipient_email}</p>
+                        </div>
+
+                        {/* Recipient Info Card */}
+                        <div className="border-sidebar-border/70 dark:border-sidebar-border relative overflow-hidden rounded-xl border bg-white p-6 shadow-sm dark:bg-neutral-900">
+                            <h2 className="text-lg font-semibold mb-4">收件人資訊</h2>
+                            <div className="space-y-4">
+                                <div className="flex">
+                                    <User className="mr-3 h-5 w-5 text-neutral-400" />
+                                    <div>
+                                        <p className="text-sm font-medium">姓名</p>
+                                        <p className="text-sm text-neutral-600 dark:text-neutral-300">{order.recipient_name}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="flex">
-                                <Phone className="mr-3 h-5 w-5 text-neutral-400" />
-                                <div>
-                                    <p className="text-sm font-medium">電話</p>
-                                    <p className="text-sm text-neutral-600 dark:text-neutral-300">{order.recipient_phone}</p>
+                                <div className="flex">
+                                    <Mail className="mr-3 h-5 w-5 text-neutral-400" />
+                                    <div>
+                                        <p className="text-sm font-medium">電子郵件</p>
+                                        <p className="text-sm text-neutral-600 dark:text-neutral-300">{order.recipient_email}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="flex">
-                                <MapPin className="mr-3 h-5 w-5 text-neutral-400" />
-                                <div>
-                                    <p className="text-sm font-medium">地址</p>
-                                    <p className="text-sm text-neutral-600 dark:text-neutral-300">
-                                        {order.recipient_zip_code} {order.recipient_city}<br />
-                                        {order.recipient_address}
-                                    </p>
+                                <div className="flex">
+                                    <Phone className="mr-3 h-5 w-5 text-neutral-400" />
+                                    <div>
+                                        <p className="text-sm font-medium">電話</p>
+                                        <p className="text-sm text-neutral-600 dark:text-neutral-300">{order.recipient_phone}</p>
+                                    </div>
+                                </div>
+                                <div className="flex">
+                                    <MapPin className="mr-3 h-5 w-5 text-neutral-400" />
+                                    <div>
+                                        <p className="text-sm font-medium">地址</p>
+                                        <p className="text-sm text-neutral-600 dark:text-neutral-300">
+                                            {order.recipient_zip_code} {order.recipient_city}<br />
+                                            {order.recipient_address}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

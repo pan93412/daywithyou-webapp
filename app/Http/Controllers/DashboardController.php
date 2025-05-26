@@ -21,7 +21,7 @@ class DashboardController extends Controller
 
     public function orders()
     {
-        $orders = auth()->user()->orders()->paginate(10);
+        $orders = auth()->user()->orders()->orderByDesc('created_at')->paginate(10);
 
         return inertia('dashboard/orders', [
             'reply' => OrderIndexResource::collection($orders),
@@ -34,7 +34,7 @@ class DashboardController extends Controller
         if ($order->user_id !== auth()->id()) {
             abort(403);
         }
-        
+
         // Load the order items with their related products
         $order->load('orderItems.product');
 

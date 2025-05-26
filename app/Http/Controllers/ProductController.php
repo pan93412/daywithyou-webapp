@@ -7,6 +7,7 @@ use App\Http\Resources\ProductIndexResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Comment;
 use App\Models\Product;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -52,7 +53,7 @@ class ProductController extends Controller
     {
         $user = $request->user();
         if (! $user) {
-            return to_route('login');
+            throw new AuthenticationException('Unauthenticated.');
         }
 
         $input = $request->validate([

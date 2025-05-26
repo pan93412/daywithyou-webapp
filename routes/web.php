@@ -14,7 +14,9 @@ Route::post('/newsletter/subscribe', [HomeController::class, 'subscribe'])->name
 Route::prefix('/products')->name('products.')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('index');
     Route::get('/{product:slug}', [ProductController::class, 'show'])->name('show');
-    Route::post('/{product:slug}/new-comment', [ProductController::class, 'storeComment'])->name('comment.store');
+    Route::post('/{product:slug}/new-comment', [ProductController::class, 'storeComment'])
+        ->name('comment.store')
+        ->middleware(['auth', 'verified']);
 });
 
 Route::prefix('/news')->name('news.')->group(function () {
@@ -31,7 +33,9 @@ Route::prefix('/carts')->name('carts.')->group(function () {
 });
 
 Route::prefix('/orders')->name('orders.')->middleware(['auth', 'verified'])->group(function () {
-    Route::get('/confirmation', [OrdersController::class, 'confirmation'])->name('confirmation');
+    Route::get('/confirmation', [OrdersController::class, 'confirmation'])
+        ->name('confirmation')
+        ->middleware(['auth', 'verified']);
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

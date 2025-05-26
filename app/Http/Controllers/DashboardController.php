@@ -11,7 +11,7 @@ class DashboardController extends Controller
         $commentCount = Comment::where('user_id', auth()->user()->id)->count();
 
         return inertia('dashboard', [
-            'commentCount' => $commentCount
+            'commentCount' => $commentCount,
         ]);
     }
 }

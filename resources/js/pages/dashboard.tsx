@@ -21,8 +21,8 @@ export default function Dashboard({ commentCount }: Props) {
             <Head title="總覽" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video rounded-xl border bg-white dark:bg-neutral-900 flex flex-col items-center justify-center gap-2 p-4 text-center shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                        <MessageSquare className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-blue-100 dark:text-blue-900 opacity-40 w-40 h-40" />
+                    <div className="border-sidebar-border/70 dark:border-sidebar-border relative flex aspect-video flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border bg-white p-4 text-center shadow-sm transition-shadow hover:shadow-md dark:bg-neutral-900">
+                        <MessageSquare className="pointer-events-none absolute top-1/2 left-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 text-blue-100 opacity-40 dark:text-blue-900" />
                         <span className="relative z-10 text-4xl font-bold">{commentCount}</span>
                         <span className="relative z-10 text-sm text-neutral-600 dark:text-neutral-400">總留言數</span>
                     </div>

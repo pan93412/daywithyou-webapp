@@ -1,15 +1,15 @@
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import AppMainLayout from '@/layouts/app/app-main-layout';
 import { SharedData } from '@/types';
 import { ProductIndex } from '@/types/resource';
 import { Link, router, useForm, usePage } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
-import { FormEvent, useState } from 'react';
+import { FormEvent } from 'react';
 import { toast } from 'sonner';
-import { Textarea } from '@/components/ui/textarea';
-import InputError from '@/components/input-error';
 
 interface CartItem {
     data: ProductIndex;
@@ -28,7 +28,7 @@ interface CheckoutForm {
     recipient_city: string;
     recipient_zip_code: string;
     note: string;
-    payment_method: "cash" | "line_pay" | "bank_transfer" | string;
+    payment_method: 'cash' | 'line_pay' | 'bank_transfer' | string;
 }
 
 export default function CheckoutPage({ carts }: Props) {

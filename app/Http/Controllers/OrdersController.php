@@ -61,7 +61,7 @@ class OrdersController extends Controller
 
         // create transaction
         try {
-            $orderId = DB::transaction(function() use($payload, $cartItems) {
+            $orderId = DB::transaction(function () use ($payload, $cartItems) {
                 $order = Order::create([
                     ...$payload,
                     'user_id' => auth()->user()->id,
@@ -78,7 +78,8 @@ class OrdersController extends Controller
                 return $order->id;
             }, attempts: 3);
         } catch (\Throwable $e) {
-            Log::error("Failed to create order: " . $e);
+            Log::error('Failed to create order: '.$e);
+
             return to_route('carts.index')->with([
                 'error' => $e->getMessage(),
             ]);

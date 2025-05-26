@@ -57,7 +57,7 @@ export default function ProductDetails({ productReply, commentsReply }: Props) {
                 },
             },
         );
-    }
+    };
 
     return (
         <AppMainLayout title={name}>

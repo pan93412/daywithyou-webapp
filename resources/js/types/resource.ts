@@ -75,6 +75,6 @@ export interface OrderConfirmation {
     id: number;
     recipient_name: string;
     note: string | null;
-    payment_method: "cash" | "line_pay" | "bank_transfer" | string;
+    payment_method: 'cash' | 'line_pay' | 'bank_transfer' | string;
     created_at: Date;
 }

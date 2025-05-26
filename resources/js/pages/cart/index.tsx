@@ -28,14 +28,11 @@ export default function CartPage({ carts, error }: Props) {
                     <p className="text-zinc-500">{carts.length} 件商品</p>
                 </div>
 
-                {error
-                    ? (
-                        <div className="mb-6 rounded-xl bg-red-50 p-4">
-                            <p className="text-sm text-red-600">{error}</p>
-                        </div>
-                    )
-                    : null
-                }
+                {error ? (
+                    <div className="mb-6 rounded-xl bg-red-50 p-4">
+                        <p className="text-sm text-red-600">{error}</p>
+                    </div>
+                ) : null}
 
                 {carts.length === 0 ? (
                     <EmptyCart />
@@ -62,7 +59,7 @@ export default function CartPage({ carts, error }: Props) {
 function CartItem({ product, quantity }: { product: ProductIndex; quantity: number }) {
     return (
         <div className="border-b border-zinc-100 py-4 last:border-0">
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col gap-4 md:flex-row">
                 <div className="h-24 w-24 flex-shrink-0">
                     <Link href={route('products.show', { slug: product.slug })}>
                         <img
@@ -77,7 +74,7 @@ function CartItem({ product, quantity }: { product: ProductIndex; quantity: numb
                         <h3 className="font-medium">{product.name}</h3>
                         <p className="text-sm text-zinc-500">{product.summary}</p>
                     </div>
-                    <div className="mt-2 flex flex-col gap-1 md:gap-0 md:flex-row md:items-center justify-between">
+                    <div className="mt-2 flex flex-col justify-between gap-1 md:flex-row md:items-center md:gap-0">
                         <div className="text-primary font-semibold">NT${product.price}</div>
                         <div className="flex items-center gap-4">
                             <CartQuantity product={product.slug} quantity={quantity} />

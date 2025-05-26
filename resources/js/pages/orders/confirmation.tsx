@@ -1,11 +1,11 @@
 import { Button } from '@/components/ui/button';
 import AppMainLayout from '@/layouts/app/app-main-layout';
+import { Data, OrderConfirmation } from '@/types/resource';
 import { router } from '@inertiajs/react';
 import { CheckCircle2 } from 'lucide-react';
-import { Data, OrderConfirmation } from '@/types/resource';
 
 interface Props {
-    reply: Data<OrderConfirmation>,
+    reply: Data<OrderConfirmation>;
 }
 
 export default function PaymentSuccessfulPage({ reply }: Props) {

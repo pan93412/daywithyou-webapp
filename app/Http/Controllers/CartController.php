@@ -30,6 +30,7 @@ class CartController extends Controller
 
         return inertia('cart/index', [
             'carts' => $carts,
+            'error' => session('error'),
         ]);
     }
 

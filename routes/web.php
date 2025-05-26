@@ -35,8 +35,10 @@ Route::prefix('/carts')->name('carts.')->group(function () {
 
 Route::prefix('/orders')->name('orders.')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/confirmation', [OrdersController::class, 'confirmation'])
-        ->name('confirmation')
-        ->middleware(['auth', 'verified']);
+        ->name('confirmation');
+
+    Route::post('/', [OrdersController::class, 'store'])
+        ->name('store');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

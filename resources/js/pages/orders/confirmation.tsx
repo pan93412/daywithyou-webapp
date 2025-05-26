@@ -2,8 +2,13 @@ import { Button } from '@/components/ui/button';
 import AppMainLayout from '@/layouts/app/app-main-layout';
 import { router } from '@inertiajs/react';
 import { CheckCircle2 } from 'lucide-react';
+import { Data, OrderConfirmation } from '@/types/resource';
 
-export default function PaymentSuccessfulPage() {
+interface Props {
+    reply: Data<OrderConfirmation>,
+}
+
+export default function PaymentSuccessfulPage({ reply }: Props) {
     return (
         <AppMainLayout title="付款成功">
             <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
@@ -17,20 +22,20 @@ export default function PaymentSuccessfulPage() {
                         <p className="mb-6 text-zinc-500">您的訂單已成功處理，感謝您的購買。</p>
 
                         <div className="mb-8 w-full max-w-md rounded-lg bg-emerald-50 p-6">
-                            <h2 className="mb-4 text-lg font-semibold">訂單詳情</h2>
+                            <h2 className="mb-4 text-lg font-semibold">訂單資訊</h2>
 
                             <div className="space-y-3 text-left">
                                 <div className="flex justify-between">
                                     <span className="text-zinc-500">訂單編號</span>
-                                    <span className="font-medium">{`ORD-${Date.now().toString().slice(-8)}`}</span>
+                                    <span className="font-medium">#{reply.data.id}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-zinc-500">訂單日期</span>
-                                    <span className="font-medium">{new Date().toLocaleDateString('zh-TW')}</span>
+                                    <span className="text-zinc-500">收貨人</span>
+                                    <span className="font-medium">{reply.data.recipient_name}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-zinc-500">付款方式</span>
-                                    <span className="font-medium">信用卡</span>
+                                    <span className="font-medium">{formatPaymentMethod(reply.data.payment_method)}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-zinc-500">訂單狀態</span>
@@ -55,4 +60,17 @@ export default function PaymentSuccessfulPage() {
             </main>
         </AppMainLayout>
     );
+}
+
+function formatPaymentMethod(paymentMethod: string) {
+    switch (paymentMethod) {
+        case 'cash':
+            return '現金';
+        case 'line_pay':
+            return 'Line Pay';
+        case 'bank_transfer':
+            return '銀行轉帳';
+        default:
+            return paymentMethod;
+    }
 }

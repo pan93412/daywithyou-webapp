@@ -14,9 +14,10 @@ interface CartItem {
 
 interface Props {
     carts: CartItem[];
+    error?: string;
 }
 
-export default function CartPage({ carts }: Props) {
+export default function CartPage({ carts, error }: Props) {
     const totalPrice = carts.reduce((sum, { data: product, quantity }) => sum + Number(product.price) * quantity, 0);
 
     return (
@@ -26,6 +27,15 @@ export default function CartPage({ carts }: Props) {
                     <h1 className="text-2xl font-bold">購物車</h1>
                     <p className="text-zinc-500">{carts.length} 件商品</p>
                 </div>
+
+                {error
+                    ? (
+                        <div className="mb-6 rounded-xl bg-red-50 p-4">
+                            <p className="text-sm text-red-600">{error}</p>
+                        </div>
+                    )
+                    : null
+                }
 
                 {carts.length === 0 ? (
                     <EmptyCart />

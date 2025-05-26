@@ -9,6 +9,7 @@ import { ArrowLeft } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { toast } from 'sonner';
 import { Textarea } from '@/components/ui/textarea';
+import InputError from '@/components/input-error';
 
 interface CartItem {
     data: ProductIndex;
@@ -20,42 +21,44 @@ interface Props {
 }
 
 interface CheckoutForm {
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-    city: string;
-    zipCode: string;
+    recipient_name: string;
+    recipient_email: string;
+    recipient_phone: string;
+    recipient_address: string;
+    recipient_city: string;
+    recipient_zip_code: string;
     note: string;
-    paymentMethod: "cash" | "line_pay" | "bank_transfer" | string;
+    payment_method: "cash" | "line_pay" | "bank_transfer" | string;
 }
 
 export default function CheckoutPage({ carts }: Props) {
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const { auth } = usePage<SharedData>().props;
     const totalPrice = carts.reduce((sum, { data: product, quantity }) => sum + Number(product.price) * quantity, 0);
 
-    const { data, setData } = useForm<Required<CheckoutForm>>({
-        name: auth.user.name,
-        email: auth.user.email,
-        phone: auth.user.phone ?? '',
-        address: auth.user.address ?? '',
-        city: auth.user.city ?? '',
-        zipCode: auth.user.zip ?? '',
+    const { data, setData, errors, post, processing } = useForm<Required<CheckoutForm>>({
+        recipient_name: auth.user.name,
+        recipient_email: auth.user.email,
+        recipient_phone: auth.user.phone ?? '',
+        recipient_address: auth.user.address ?? '',
+        recipient_city: auth.user.city ?? '',
+        recipient_zip_code: auth.user.zip ?? '',
         note: '',
-        paymentMethod: 'cash',
+        payment_method: 'cash',
     });
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        setIsSubmitting(true);
 
-        // Simulate form submission
-        setTimeout(() => {
-            toast.success('訂單已成功提交');
-            router.visit(route('orders.confirmation'));
-            setIsSubmitting(false);
-        }, 1500);
+        post(route('orders.store'), {
+            onSuccess: () => {
+                toast.success('已經送出訂單！');
+            },
+            onError(error) {
+                for (const value of Object.values(error)) {
+                    toast.error(value);
+                }
+            },
+        });
     };
 
     if (carts.length === 0) {
@@ -90,89 +93,95 @@ export default function CheckoutPage({ carts }: Props) {
 
                             <div className="space-y-4">
                                 <div>
-                                    <label htmlFor="name" className="mb-1 block text-sm font-medium">
+                                    <label htmlFor="recipient-name" className="mb-1 block text-sm font-medium">
                                         姓名
                                     </label>
                                     <Input
-                                        id="name"
-                                        name="name"
-                                        value={data.name}
-                                        onChange={(e) => setData('name', e.target.value)}
+                                        id="recipient-name"
+                                        name="recipient-name"
+                                        value={data.recipient_name}
+                                        onChange={(e) => setData('recipient_name', e.target.value)}
                                         placeholder="請輸入姓名"
                                         required
                                     />
+                                    {errors.recipient_name && <InputError message={errors.recipient_name} />}
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <label htmlFor="email" className="mb-1 block text-sm font-medium">
+                                        <label htmlFor="recipient-email" className="mb-1 block text-sm font-medium">
                                             電子郵件
                                         </label>
                                         <Input
-                                            id="email"
-                                            name="email"
+                                            id="recipient-email"
+                                            name="recipient-email"
                                             type="email"
-                                            value={data.email}
-                                            onChange={(e) => setData('email', e.target.value)}
+                                            value={data.recipient_email}
+                                            onChange={(e) => setData('recipient_email', e.target.value)}
                                             placeholder="請輸入電子郵件"
                                             required
                                         />
+                                        {errors.recipient_email && <InputError message={errors.recipient_email} />}
                                     </div>
                                     <div>
-                                        <label htmlFor="phone" className="mb-1 block text-sm font-medium">
+                                        <label htmlFor="recipient-phone" className="mb-1 block text-sm font-medium">
                                             手機號碼
                                         </label>
                                         <Input
-                                            id="phone"
-                                            name="phone"
-                                            value={data.phone}
-                                            onChange={(e) => setData('phone', e.target.value)}
+                                            id="recipient-phone"
+                                            name="recipient-phone"
+                                            value={data.recipient_phone}
+                                            onChange={(e) => setData('recipient_phone', e.target.value)}
                                             placeholder="請輸入手機號碼"
                                             required
                                         />
+                                        {errors.recipient_phone && <InputError message={errors.recipient_phone} />}
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label htmlFor="address" className="mb-1 block text-sm font-medium">
+                                    <label htmlFor="recipient-address" className="mb-1 block text-sm font-medium">
                                         地址
                                     </label>
                                     <Input
-                                        id="address"
-                                        name="address"
-                                        value={data.address}
-                                        onChange={(e) => setData('address', e.target.value)}
+                                        id="recipient-address"
+                                        name="recipient-address"
+                                        value={data.recipient_address}
+                                        onChange={(e) => setData('recipient_address', e.target.value)}
                                         placeholder="請輸入詳細地址"
                                         required
                                     />
+                                    {errors.recipient_address && <InputError message={errors.recipient_address} />}
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <label htmlFor="city" className="mb-1 block text-sm font-medium">
+                                        <label htmlFor="recipient-city" className="mb-1 block text-sm font-medium">
                                             城市
                                         </label>
                                         <Input
-                                            id="city"
-                                            name="city"
-                                            value={data.city}
-                                            onChange={(e) => setData('city', e.target.value)}
+                                            id="recipient-city"
+                                            name="recipient-city"
+                                            value={data.recipient_city}
+                                            onChange={(e) => setData('recipient_city', e.target.value)}
                                             placeholder="請輸入城市"
                                             required
                                         />
+                                        {errors.recipient_city && <InputError message={errors.recipient_city} />}
                                     </div>
                                     <div>
-                                        <label htmlFor="zipCode" className="mb-1 block text-sm font-medium">
+                                        <label htmlFor="recipient-zip-code" className="mb-1 block text-sm font-medium">
                                             郵遞區號
                                         </label>
                                         <Input
-                                            id="zipCode"
-                                            name="zipCode"
-                                            value={data.zipCode}
-                                            onChange={(e) => setData('zipCode', e.target.value)}
+                                            id="recipient-zip-code"
+                                            name="recipient-zip-code"
+                                            value={data.recipient_zip_code}
+                                            onChange={(e) => setData('recipient_zip_code', e.target.value)}
                                             placeholder="請輸入郵遞區號"
                                             required
                                         />
+                                        {errors.recipient_zip_code && <InputError message={errors.recipient_zip_code} />}
                                     </div>
                                 </div>
                             </div>
@@ -183,11 +192,11 @@ export default function CheckoutPage({ carts }: Props) {
 
                             <div className="space-y-4">
                                 <div>
-                                    <label htmlFor="paymentMethod" className="mb-1 block text-sm font-medium">
+                                    <label htmlFor="payment-method" className="mb-1 block text-sm font-medium">
                                         選擇付款方式
                                     </label>
-                                    <Select value={data.paymentMethod} onValueChange={(value) => setData('paymentMethod', value)}>
-                                        <SelectTrigger id="paymentMethod" className="w-full">
+                                    <Select value={data.payment_method} onValueChange={(value) => setData('payment_method', value)}>
+                                        <SelectTrigger id="payment-method" className="w-full">
                                             <SelectValue placeholder="選擇付款方式" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -196,6 +205,7 @@ export default function CheckoutPage({ carts }: Props) {
                                             <SelectItem value="bank_transfer">銀行轉帳</SelectItem>
                                         </SelectContent>
                                     </Select>
+                                    {errors.payment_method && <InputError message={errors.payment_method} />}
                                 </div>
                             </div>
                         </div>
@@ -211,8 +221,9 @@ export default function CheckoutPage({ carts }: Props) {
                                     name="note"
                                     value={data.note}
                                     onChange={(e) => setData('note', e.target.value)}
-                                    placeholder="請輸入備註，可留空"
+                                    placeholder="備註（選填）"
                                 />
+                                {errors.note && <InputError message={errors.note} />}
                             </div>
                         </div>
                     </div>
@@ -255,8 +266,8 @@ export default function CheckoutPage({ carts }: Props) {
                                 </div>
                             </div>
 
-                            <Button type="submit" className="mt-6 w-full" disabled={isSubmitting}>
-                                {isSubmitting ? '處理中...' : '提交訂單'}
+                            <Button type="submit" className="mt-6 w-full" disabled={processing}>
+                                {processing ? '處理中...' : '提交訂單'}
                             </Button>
                         </div>
                     </div>

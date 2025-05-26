@@ -17,7 +17,7 @@ const mainNavItems: NavItem[] = [
         title: '訂單',
         href: '/dashboard/orders',
         icon: PackageIcon,
-    }
+    },
 ];
 
 const footerNavItems: NavItem[] = [

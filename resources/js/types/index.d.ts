@@ -33,7 +33,7 @@ export interface SharedData {
 }
 
 export interface Message {
-    type: "error" | "success";
+    type: 'error' | 'success';
     title: string;
     content: string;
 }

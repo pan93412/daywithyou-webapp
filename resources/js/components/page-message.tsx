@@ -1,10 +1,10 @@
-import { usePage } from '@inertiajs/react';
-import { SharedData } from '@/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { SharedData } from '@/types';
+import { usePage } from '@inertiajs/react';
 import { AlertTriangle, Info } from 'lucide-react';
 import * as React from 'react';
 
-export function PageMessage(props: React.ComponentProps<"div">) {
+export function PageMessage(props: React.ComponentProps<'div'>) {
     const { message } = usePage<SharedData>().props;
 
     if (!message) return null;

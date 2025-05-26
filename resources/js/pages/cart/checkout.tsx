@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import AppMainLayout from '@/layouts/app/app-main-layout';
 import { SharedData } from '@/types';
 import { ProductIndex } from '@/types/resource';
-import { Link, router, useForm, usePage } from '@inertiajs/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
 import { FormEvent } from 'react';
 import { toast } from 'sonner';

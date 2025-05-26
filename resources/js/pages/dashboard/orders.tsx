@@ -1,12 +1,11 @@
-import { OrderIndex, PaginatedData } from '@/types/resource';
-import AppLayout from '@/layouts/app-layout';
-import { Head } from '@inertiajs/react';
-import { Link } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
-import { Calendar, CreditCard, Package, User } from 'lucide-react';
-import { type BreadcrumbItem } from '@/types';
-import { formatDate } from '@/lib/utils';
 import { PageMessage } from '@/components/page-message';
+import { Button } from '@/components/ui/button';
+import AppLayout from '@/layouts/app-layout';
+import { formatDate } from '@/lib/utils';
+import { type BreadcrumbItem } from '@/types';
+import { OrderIndex, PaginatedData } from '@/types/resource';
+import { Head, Link } from '@inertiajs/react';
+import { Calendar, CreditCard, Package, User } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -16,10 +15,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 interface Props {
-    reply: PaginatedData<OrderIndex[]>
+    reply: PaginatedData<OrderIndex[]>;
 }
 
-export default function OrderDashboardPage({reply}: Props) {
+export default function OrderDashboardPage({ reply }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="訂單管理" />
@@ -41,38 +40,53 @@ export default function OrderDashboardPage({reply}: Props) {
                                 <table className="w-full border-collapse">
                                     <thead>
                                         <tr className="border-b border-neutral-200 dark:border-neutral-700">
-                                            <th className="whitespace-nowrap py-3 px-4 text-left text-sm font-medium text-neutral-600 dark:text-neutral-300">訂單編號</th>
-                                            <th className="whitespace-nowrap py-3 px-4 text-left text-sm font-medium text-neutral-600 dark:text-neutral-300">收件人</th>
-                                            <th className="whitespace-nowrap py-3 px-4 text-left text-sm font-medium text-neutral-600 dark:text-neutral-300">付款方式</th>
-                                            <th className="whitespace-nowrap py-3 px-4 text-left text-sm font-medium text-neutral-600 dark:text-neutral-300">建立日期</th>
-                                            <th className="whitespace-nowrap py-3 px-4 text-left text-sm font-medium text-neutral-600 dark:text-neutral-300">操作</th>
+                                            <th className="px-4 py-3 text-left text-sm font-medium whitespace-nowrap text-neutral-600 dark:text-neutral-300">
+                                                訂單編號
+                                            </th>
+                                            <th className="px-4 py-3 text-left text-sm font-medium whitespace-nowrap text-neutral-600 dark:text-neutral-300">
+                                                收件人
+                                            </th>
+                                            <th className="px-4 py-3 text-left text-sm font-medium whitespace-nowrap text-neutral-600 dark:text-neutral-300">
+                                                付款方式
+                                            </th>
+                                            <th className="px-4 py-3 text-left text-sm font-medium whitespace-nowrap text-neutral-600 dark:text-neutral-300">
+                                                建立日期
+                                            </th>
+                                            <th className="px-4 py-3 text-left text-sm font-medium whitespace-nowrap text-neutral-600 dark:text-neutral-300">
+                                                操作
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {reply.data.map(order => (
-                                            <tr key={order.id} className="border-b border-neutral-200 hover:bg-neutral-50 dark:border-neutral-700 dark:hover:bg-neutral-800">
-                                                <td className="whitespace-nowrap py-4 px-4 text-sm">#{order.id}</td>
-                                                <td className="whitespace-nowrap py-4 px-4 text-sm">
+                                        {reply.data.map((order) => (
+                                            <tr
+                                                key={order.id}
+                                                className="border-b border-neutral-200 hover:bg-neutral-50 dark:border-neutral-700 dark:hover:bg-neutral-800"
+                                            >
+                                                <td className="px-4 py-4 text-sm whitespace-nowrap">#{order.id}</td>
+                                                <td className="px-4 py-4 text-sm whitespace-nowrap">
                                                     <div className="flex items-center">
                                                         <User className="mr-2 h-4 w-4 text-neutral-400" />
                                                         {order.recipient_name}
                                                     </div>
                                                 </td>
-                                                <td className="whitespace-nowrap py-4 px-4 text-sm">
+                                                <td className="px-4 py-4 text-sm whitespace-nowrap">
                                                     <div className="flex items-center">
                                                         <CreditCard className="mr-2 h-4 w-4 text-neutral-400" />
                                                         {getPaymentMethodText(order.payment_method)}
                                                     </div>
                                                 </td>
-                                                <td className="whitespace-nowrap py-4 px-4 text-sm">
+                                                <td className="px-4 py-4 text-sm whitespace-nowrap">
                                                     <div className="flex items-center">
                                                         <Calendar className="mr-2 h-4 w-4 text-neutral-400" />
                                                         {formatDate(new Date(order.created_at))}
                                                     </div>
                                                 </td>
-                                                <td className="whitespace-nowrap py-4 px-4 text-sm">
+                                                <td className="px-4 py-4 text-sm whitespace-nowrap">
                                                     <Link href={route('dashboard.orders.details', { order: order.id })}>
-                                                        <Button variant="outline" size="sm">檢視訂單</Button>
+                                                        <Button variant="outline" size="sm">
+                                                            檢視訂單
+                                                        </Button>
                                                     </Link>
                                                 </td>
                                             </tr>

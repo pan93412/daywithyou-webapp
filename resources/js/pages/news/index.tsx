@@ -17,7 +17,7 @@ export default function NewsList({ newsReply }: Props) {
                 {/* News Grid */}
                 <div className="mb-8 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
                     {newsReply.data.map((news) => (
-                        <NewsCard key={news.slug} title={news.title} summary={news.summary} slug={news.slug} created_at={news.created_at} />
+                        <NewsCard key={news.slug} title={news.title} summary={news.summary} slug={news.slug} created_at={new Date(news.created_at)} />
                     ))}
                 </div>
 

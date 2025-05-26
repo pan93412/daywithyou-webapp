@@ -1,3 +1,4 @@
+import { PageMessage } from '@/components/page-message';
 import { Button } from '@/components/ui/button';
 import AppMainLayout from '@/layouts/app/app-main-layout';
 import { SharedData } from '@/types';
@@ -6,7 +7,6 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import { useCallback } from 'react';
 import { toast } from 'sonner';
-import { PageMessage } from '@/components/page-message';
 
 interface CartItem {
     data: ProductIndex;
@@ -18,7 +18,6 @@ interface Props {
 }
 
 export default function CartPage({ carts }: Props) {
-    const { message } = usePage<SharedData>().props;
     const totalPrice = carts.reduce((sum, { data: product, quantity }) => sum + Number(product.price) * quantity, 0);
 
     return (

@@ -28,10 +28,10 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
 
-            'zip' => ['string', 'max:255'],
-            'phone' => ['string', 'max:255'],
-            'address' => ['string', 'max:255'],
-            'city' => ['string', 'max:255'],
+            'zip' => ['string', 'max:255', 'nullable'],
+            'phone' => ['string', 'max:255', 'nullable'],
+            'address' => ['string', 'max:255', 'nullable'],
+            'city' => ['string', 'max:255', 'nullable'],
         ];
     }
 }

@@ -22,6 +22,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 type ProfileForm = {
     name: string;
     email: string;
+    zip: string;
+    phone: string;
+    address: string;
+    city: string;
 };
 
 export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
@@ -30,6 +34,10 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
         name: auth.user.name,
         email: auth.user.email,
+        zip: auth.user.zip ?? '',
+        phone: auth.user.phone ?? '',
+        address: auth.user.address ?? '',
+        city: auth.user.city ?? '',
     });
 
     const submit: FormEventHandler = (e) => {
@@ -103,6 +111,66 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                 )}
                             </div>
                         )}
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="zip">郵遞區號</Label>
+
+                            <Input
+                                id="zip"
+                                className="mt-1 block w-full"
+                                value={data.zip}
+                                onChange={(e) => setData('zip', e.target.value)}
+                                autoComplete="zip"
+                                placeholder="郵遞區號"
+                            />
+
+                            <InputError className="mt-2" message={errors.zip} />
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="phone">電話</Label>
+
+                            <Input
+                                id="phone"
+                                className="mt-1 block w-full"
+                                value={data.phone}
+                                onChange={(e) => setData('phone', e.target.value)}
+                                autoComplete="phone"
+                                placeholder="電話"
+                            />
+
+                            <InputError className="mt-2" message={errors.phone} />
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="address">地址</Label>
+
+                            <Input
+                                id="address"
+                                className="mt-1 block w-full"
+                                value={data.address}
+                                onChange={(e) => setData('address', e.target.value)}
+                                autoComplete="address"
+                                placeholder="地址"
+                            />
+
+                            <InputError className="mt-2" message={errors.address} />
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="city">城市</Label>
+
+                            <Input
+                                id="city"
+                                className="mt-1 block w-full"
+                                value={data.city}
+                                onChange={(e) => setData('city', e.target.value)}
+                                autoComplete="city"
+                                placeholder="城市"
+                            />
+
+                            <InputError className="mt-2" message={errors.city} />
+                        </div>
 
                         <div className="flex items-center gap-4">
                             <Button disabled={processing}>儲存</Button>

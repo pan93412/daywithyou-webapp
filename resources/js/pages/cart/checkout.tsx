@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AppMainLayout from '@/layouts/app/app-main-layout';
 import { SharedData } from '@/types';
 import { ProductIndex } from '@/types/resource';
-import { Link, router, usePage } from '@inertiajs/react';
+import { Link, router, useForm, usePage } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { toast } from 'sonner';
@@ -18,29 +18,30 @@ interface Props {
     carts: CartItem[];
 }
 
+interface CheckoutForm {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    zipCode: string;
+    paymentMethod: "cash" | "line_pay" | "bank_transfer" | string;
+}
+
 export default function CheckoutPage({ carts }: Props) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { auth } = usePage<SharedData>().props;
     const totalPrice = carts.reduce((sum, { data: product, quantity }) => sum + Number(product.price) * quantity, 0);
 
-    const [formData, setFormData] = useState({
+    const { data, setData } = useForm<Required<CheckoutForm>>({
         name: auth.user.name,
         email: auth.user.email,
-        phone: '',
-        address: '',
-        city: '',
-        zipCode: '',
+        phone: auth.user.phone ?? '',
+        address: auth.user.address ?? '',
+        city: auth.user.city ?? '',
+        zipCode: auth.user.zip ?? '',
         paymentMethod: 'cash',
     });
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handleSelectChange = (name: string, value: string) => {
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    };
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -92,8 +93,8 @@ export default function CheckoutPage({ carts }: Props) {
                                     <Input
                                         id="name"
                                         name="name"
-                                        value={formData.name}
-                                        onChange={handleInputChange}
+                                        value={data.name}
+                                        onChange={(e) => setData('name', e.target.value)}
                                         placeholder="請輸入姓名"
                                         required
                                     />
@@ -108,8 +109,8 @@ export default function CheckoutPage({ carts }: Props) {
                                             id="email"
                                             name="email"
                                             type="email"
-                                            value={formData.email}
-                                            onChange={handleInputChange}
+                                            value={data.email}
+                                            onChange={(e) => setData('email', e.target.value)}
                                             placeholder="請輸入電子郵件"
                                             required
                                         />
@@ -121,8 +122,8 @@ export default function CheckoutPage({ carts }: Props) {
                                         <Input
                                             id="phone"
                                             name="phone"
-                                            value={formData.phone}
-                                            onChange={handleInputChange}
+                                            value={data.phone}
+                                            onChange={(e) => setData('phone', e.target.value)}
                                             placeholder="請輸入手機號碼"
                                             required
                                         />
@@ -136,8 +137,8 @@ export default function CheckoutPage({ carts }: Props) {
                                     <Input
                                         id="address"
                                         name="address"
-                                        value={formData.address}
-                                        onChange={handleInputChange}
+                                        value={data.address}
+                                        onChange={(e) => setData('address', e.target.value)}
                                         placeholder="請輸入詳細地址"
                                         required
                                     />
@@ -151,8 +152,8 @@ export default function CheckoutPage({ carts }: Props) {
                                         <Input
                                             id="city"
                                             name="city"
-                                            value={formData.city}
-                                            onChange={handleInputChange}
+                                            value={data.city}
+                                            onChange={(e) => setData('city', e.target.value)}
                                             placeholder="請輸入城市"
                                             required
                                         />
@@ -164,8 +165,8 @@ export default function CheckoutPage({ carts }: Props) {
                                         <Input
                                             id="zipCode"
                                             name="zipCode"
-                                            value={formData.zipCode}
-                                            onChange={handleInputChange}
+                                            value={data.zipCode}
+                                            onChange={(e) => setData('zipCode', e.target.value)}
                                             placeholder="請輸入郵遞區號"
                                             required
                                         />
@@ -182,7 +183,7 @@ export default function CheckoutPage({ carts }: Props) {
                                     <label htmlFor="paymentMethod" className="mb-1 block text-sm font-medium">
                                         選擇付款方式
                                     </label>
-                                    <Select value={formData.paymentMethod} onValueChange={(value) => handleSelectChange('paymentMethod', value)}>
+                                    <Select value={data.paymentMethod} onValueChange={(value) => setData('paymentMethod', value)}>
                                         <SelectTrigger id="paymentMethod" className="w-full">
                                             <SelectValue placeholder="選擇付款方式" />
                                         </SelectTrigger>

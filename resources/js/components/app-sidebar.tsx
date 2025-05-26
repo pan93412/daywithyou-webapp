@@ -21,11 +21,6 @@ const footerNavItems: NavItem[] = [
         href: 'https://github.com/pan93412/daywithyou-webapp',
         icon: Folder,
     },
-    {
-        title: '回首頁',
-        href: route('home'),
-        icon: HomeIcon,
-    },
 ];
 
 export function AppSidebar() {
@@ -35,7 +30,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={route('dashboard')} prefetch>
+                            <Link href={route('home')} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>

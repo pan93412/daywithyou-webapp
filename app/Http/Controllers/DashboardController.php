@@ -14,10 +14,12 @@ class DashboardController extends Controller
     {
         $commentsCount = Comment::where('user_id', auth()->user()->id)->count();
         $ordersCount = auth()->user()->orders()->count();
+        $latestOrder = auth()->user()->orders()->latest()->first();
 
         return inertia('dashboard', [
             'commentsCount' => $commentsCount,
             'ordersCount' => $ordersCount,
+            'latestOrder' => $latestOrder ? OrderIndexResource::make($latestOrder) : null,
         ]);
     }
 

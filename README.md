@@ -28,6 +28,117 @@
 - **資料庫**：MySQL/PostgreSQL
 - **部署**：[Zeabur](https://zeabur.com) 一鍵部署
 
+### 資料庫結構
+
+```mermaid
+erDiagram
+    USERS ||--o{ COMMENTS : creates
+    PRODUCTS ||--o{ COMMENTS : receives
+    
+    USERS {
+        bigint id PK
+        string name
+        string email UK
+        timestamp email_verified_at
+        string password
+        string remember_token
+        timestamps timestamps
+    }
+    
+    PRODUCTS {
+        bigint id PK
+        string name
+        string slug UK
+        text description
+        decimal price
+        string figure
+        timestamps timestamps
+        timestamp deleted_at
+    }
+    
+    COMMENTS {
+        bigint id PK
+        bigint user_id FK
+        bigint product_id FK
+        string content
+        integer rating
+        timestamps timestamps
+        timestamp deleted_at
+    }
+    
+    NEWS {
+        bigint id PK
+        string title
+        longtext content
+        string slug UK
+        timestamps timestamps
+    }
+    
+    SUBSCRIBERS {
+        string email PK
+        timestamps timestamps
+    }
+```
+
+### 網站端點
+
+#### 首頁端點
+
+| 方法  | 路徑  | 名稱     | 說明 | 需要登入 |
+|-----|-----|--------|----|------|
+| GET | `/` | `home` | 首頁 | 否    |
+
+#### 商品端點
+
+| 方法   | 路徑                             | 名稱                       | 說明     | 需要登入 |
+|------|--------------------------------|--------------------------|--------|------|
+| GET  | `/products`                    | `products.index`         | 商品列表   | 否    |
+| GET  | `/products/{slug}`             | `products.show`          | 商品詳細   | 否    |
+| POST | `/products/{slug}/new-comment` | `products.comment.store` | 新增商品評論 | 是    |
+
+#### 最新消息端點
+
+| 方法  | 路徑             | 名稱           | 說明     | 需要登入 |
+|-----|----------------|--------------|--------|------|
+| GET | `/news`        | `news.index` | 最新消息列表 | 否    |
+| GET | `/news/{slug}` | `news.show`  | 最新消息詳細 | 否    |
+
+#### 購物車端點
+
+| 方法     | 路徑                        | 名稱                | 說明        | 需要登入 |
+|--------|---------------------------|-------------------|-----------|------|
+| GET    | `/carts`                  | `carts.index`     | 購物車列表     | 否    |
+| GET    | `/carts/checkout`         | `carts.checkout`  | 結帳頁面      | 是    |
+| POST   | `/carts/{slug}/increment` | `carts.increment` | 增加購物車商品數量 | 否    |
+| DELETE | `/carts/{slug}`           | `carts.remove`    | 移除購物車商品   | 否    |
+| POST   | `/carts/clear`            | `carts.clear`     | 清空購物車     | 否    |
+
+#### 訂單端點
+
+| 方法  | 路徑                     | 名稱                    | 說明     | 需要登入 |
+|-----|------------------------|-----------------------|--------|------|
+| GET | `/orders/confirmation` | `orders.confirmation` | 訂單確認頁面 | 是    |
+| GET | `/dashboard`           | `dashboard`           | 會員中心   | 是    |
+
+#### 認證端點
+
+| 方法   | 路徑                                 | 名稱                    | 說明       | 需要登入 |
+|------|------------------------------------|-----------------------|----------|------|
+| GET  | `/register`                        | `register`            | 註冊頁面     | 否    |
+| POST | `/register`                        | -                     | 註冊       | 否    |
+| GET  | `/login`                           | `login`               | 登入頁面     | 否    |
+| POST | `/login`                           | -                     | 登入       | 否    |
+| GET  | `/forgot-password`                 | `password.request`    | 忘記密碼頁面   | 否    |
+| POST | `/forgot-password`                 | `password.email`      | 發送忘記密碼郵件 | 否    |
+| GET  | `/reset-password/{token}`          | `password.reset`      | 重設密碼頁面   | 否    |
+| POST | `/reset-password`                  | `password.store`      | 重設密碼     | 否    |
+| GET  | `/verify-email`                    | `verification.notice` | 驗證郵件頁面   | 是    |
+| GET  | `/verify-email/{id}/{hash}`        | `verification.verify` | 驗證郵件     | 是    |
+| POST | `/email/verification-notification` | `verification.send`   | 發送驗證郵件   | 是    |
+| GET  | `/confirm-password`                | `password.confirm`    | 確認密碼頁面   | 是    |
+| POST | `/confirm-password`                | -                     | 確認密碼     | 是    |
+| POST | `/logout`                          | `logout`              | 登出       | 是    |
+
 ## 開發
 
 ### 前置需求

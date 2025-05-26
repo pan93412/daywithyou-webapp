@@ -36,3 +36,5 @@ devenv.local.nix
 **/caddy
 frankenphp
 frankenphp-worker.php
+
+data/

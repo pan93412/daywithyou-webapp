@@ -39,8 +39,8 @@ export interface Product {
     description: string;
     price: string;
     figure: string;
-    created_at: Date;
-    updated_at: Date;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface User {
@@ -60,15 +60,15 @@ export interface NewsIndex {
     title: string;
     summary: string;
     slug: string;
-    created_at: Date;
+    created_at: string;
 }
 
 export interface News {
     title: string;
     slug: string;
     content: string;
-    created_at: Date;
-    updated_at: Date;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface OrderConfirmation {
@@ -76,5 +76,38 @@ export interface OrderConfirmation {
     recipient_name: string;
     note: string | null;
     payment_method: 'cash' | 'line_pay' | 'bank_transfer' | string;
-    created_at: Date;
+    created_at: string;
+}
+
+export interface Order {
+    id: number;
+    recipient_name: string;
+    recipient_email: string;
+    recipient_phone: string;
+    recipient_address: string;
+    recipient_city: string;
+    recipient_zip_code: string;
+    note: string | null;
+    payment_method: 'cash' | 'line_pay' | 'bank_transfer' | string;
+    created_at: string;
+    updated_at: string;
+    user_id: number;
+    user?: User;
+}
+
+export interface OrderIndex {
+    id: number;
+    recipient_name: string;
+    payment_method: 'cash' | 'line_pay' | 'bank_transfer' | string;
+    created_at: string;
+}
+
+export interface OrderItem {
+    id: number;
+    quantity: number;
+    created_at: string;
+    updated_at: string;
+    order_id: number;
+    product_id: number;
+    product?: ProductIndex;
 }

@@ -13,6 +13,11 @@ const mainNavItems: NavItem[] = [
         href: '/dashboard',
         icon: LayoutGrid,
     },
+    {
+        title: '訂單',
+        href: '/dashboard/orders',
+        icon: LayoutGrid,
+    }
 ];
 
 const footerNavItems: NavItem[] = [

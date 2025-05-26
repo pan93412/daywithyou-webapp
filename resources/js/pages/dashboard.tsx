@@ -7,7 +7,7 @@ import { MessageSquare } from 'lucide-react';
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: '總覽',
-        href: '/dashboard',
+        href: '#',
     },
 ];
 

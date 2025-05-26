@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\OrderIndexResource;
+use App\Http\Resources\OrderItemResource;
+use App\Http\Resources\OrderResource;
 use App\Models\Comment;
+use App\Models\Order;
 
 class DashboardController extends Controller
 {
@@ -12,6 +16,31 @@ class DashboardController extends Controller
 
         return inertia('dashboard', [
             'commentCount' => $commentCount,
+        ]);
+    }
+
+    public function orders()
+    {
+        $orders = auth()->user()->orders()->paginate(10);
+
+        return inertia('dashboard/orders', [
+            'reply' => OrderIndexResource::collection($orders),
+        ]);
+    }
+
+    public function orderDetails(Order $order)
+    {
+        // Ensure the order belongs to the authenticated user
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
+        
+        // Load the order items with their related products
+        $order->load('orderItems.product');
+
+        return inertia('dashboard/orders/details', [
+            'reply' => OrderResource::make($order),
+            'orderItems' => OrderItemResource::collection($order->orderItems),
         ]);
     }
 }

@@ -42,6 +42,11 @@ Route::prefix('/orders')->name('orders.')->middleware(['auth', 'verified'])->gro
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::prefix('/dashboard')->name('dashboard.')->group(function () {
+        Route::get('/orders', [DashboardController::class, 'orders'])->name('orders');
+        Route::get('/orders/{order}', [DashboardController::class, 'orderDetails'])->name('orders.details');
+    });
 });
 
 require __DIR__.'/settings.php';

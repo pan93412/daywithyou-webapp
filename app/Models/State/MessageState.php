@@ -10,9 +10,7 @@ class MessageState
         public MessageStateType $type,
         public string $title,
         public string $content
-    )
-    {
-    }
+    ) {}
 
     public function toArray(): array
     {

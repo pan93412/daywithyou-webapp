@@ -140,7 +140,7 @@ class OrdersController extends Controller
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
-            Log::error('Order cancellation failed: ' . $e->getMessage());
+            Log::error('Order cancellation failed: '.$e->getMessage());
 
             return back()->with([
                 MessageState::$MESSAGE_SESSION_KEY => (new MessageState(

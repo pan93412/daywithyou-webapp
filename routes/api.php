@@ -14,24 +14,30 @@ Route::prefix('/auth')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [ApiAuthenticationController::class, 'logout'])->name('logout');
     });
-});
+})->name('api.auth.');
 
 Route::prefix('/me')->middleware('auth:sanctum')->group(function () {
     Route::get('/', [ApiUserController::class, 'index']);
     Route::put('/', [ApiUserController::class, 'update']);
     Route::put('/password', [ApiUserController::class, 'updatePassword']);
     Route::delete('/', [ApiUserController::class, 'destroy']);
-});
+})->name('api.me.');
 
 Route::resource('/news', ApiNewsController::class)
-    ->only(['index', 'show']);
+    ->only(['index', 'show'])
+    ->names('api.news');
 
 Route::resource('/products', ApiProductsController::class)
-    ->only(['index', 'show']);
-Route::get('/products/{product}/comments', [ApiProductsController::class, 'comments']);
+    ->only(['index', 'show'])
+    ->names('api.products');
+
+Route::get('/products/{product}/comments', [ApiProductsController::class, 'comments'])
+    ->name('api.products.comments');
 Route::post('/products/{product}/comments', [ApiProductsController::class, 'storeComment'])
-    ->middleware('auth:sanctum');
+    ->middleware('auth:sanctum')
+    ->name('api.products.comments.store');
 
 Route::resource('/orders', ApiOrdersController::class)
     ->only(['index', 'show', 'store', 'destroy'])
-    ->middleware('auth:sanctum');
+    ->middleware('auth:sanctum')
+    ->names('api.orders');

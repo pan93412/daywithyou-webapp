@@ -20,8 +20,8 @@ class ApiUserController extends Controller
     {
         $user = auth()->user();
 
-        if (!$user) {
-            throw new AuthenticationException();
+        if (! $user) {
+            throw new AuthenticationException;
         }
 
         return UserResource::make($user);

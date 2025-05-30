@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Product;
 use App\Models\Comment;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -31,9 +31,9 @@ describe('Products API', function () {
                         'name',
                         'summary',
                         'price',
-                        'figure'
-                    ]
-                ]
+                        'figure',
+                    ],
+                ],
             ]);
     });
 
@@ -52,7 +52,7 @@ describe('Products API', function () {
             'name' => 'Test Product',
             'description' => 'This is a test product description.',
             'slug' => 'test-product',
-            'price' => 99.99
+            'price' => 99.99,
         ]);
 
         // Get the product by slug
@@ -60,11 +60,10 @@ describe('Products API', function () {
 
         // Assert the response structure and content
         $response->assertStatus(200)
-            ->assertJson(fn (AssertableJson $json) =>
-                $json->where('data.name', $product->name)
-                     ->where('data.slug', $product->slug)
-                     ->where('data.price', (string)$product->price) // Cast to string for comparison
-                     ->etc()
+            ->assertJson(fn (AssertableJson $json) => $json->where('data.name', $product->name)
+                ->where('data.slug', $product->slug)
+                ->where('data.price', (string) $product->price) // Cast to string for comparison
+                ->etc()
             );
     });
 
@@ -79,7 +78,7 @@ describe('Products API', function () {
     it('correctly formats the summary for product descriptions', function () {
         // Arrange: Create a product with a description
         $product = Product::factory()->create([
-            'description' => 'This is a test product description that will be summarized in the API response.'
+            'description' => 'This is a test product description that will be summarized in the API response.',
         ]);
 
         // Act: Call the index endpoint
@@ -89,13 +88,12 @@ describe('Products API', function () {
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    '*' => ['summary']
-                ]
+                    '*' => ['summary'],
+                ],
             ])
             // Just verify the summary exists and is a string
-            ->assertJson(fn (AssertableJson $json) =>
-                $json->has('data.0.summary')
-                     ->etc()
+            ->assertJson(fn (AssertableJson $json) => $json->has('data.0.summary')
+                ->etc()
             );
 
         // Get the actual summary to verify its format
@@ -126,10 +124,10 @@ describe('Products API', function () {
     it('paginates the products collection correctly', function () {
         // Arrange: Create 15 products
         Product::factory()->count(15)->create();
-        
+
         // Act: Call the index endpoint with pagination parameters
         $response = $this->getJson("{$this->productsRoute}?per_page=5&page=2");
-        
+
         // Assert: Check the response structure and pagination
         $response->assertStatus(200)
             ->assertJsonCount(5, 'data')
@@ -144,32 +142,30 @@ describe('Products API', function () {
                     'path',
                     'per_page',
                     'to',
-                    'total'
-                ]
+                    'total',
+                ],
             ])
-            ->assertJson(fn (AssertableJson $json) => 
-                $json->where('meta.current_page', 2)
-                     ->where('meta.per_page', 5)
-                     ->where('meta.total', 15)
-                     ->where('meta.last_page', 3)
-                     ->etc()
+            ->assertJson(fn (AssertableJson $json) => $json->where('meta.current_page', 2)
+                ->where('meta.per_page', 5)
+                ->where('meta.total', 15)
+                ->where('meta.last_page', 3)
+                ->etc()
             );
     });
 
     it('returns the default number of items per page when per_page is not specified', function () {
         // Arrange: Create 15 products
         Product::factory()->count(15)->create();
-        
+
         // Act: Call the index endpoint without pagination parameters
         $response = $this->getJson($this->productsRoute);
-        
+
         // Assert: Check the default pagination (10 items per page)
         $response->assertStatus(200)
             ->assertJsonCount(10, 'data')
-            ->assertJson(fn (AssertableJson $json) => 
-                $json->where('meta.current_page', 1)
-                     ->where('meta.per_page', 10)
-                     ->etc()
+            ->assertJson(fn (AssertableJson $json) => $json->where('meta.current_page', 1)
+                ->where('meta.per_page', 10)
+                ->etc()
             );
     });
 
@@ -178,27 +174,27 @@ describe('Products API', function () {
         $products = [];
         for ($i = 1; $i <= 12; $i++) {
             $products[] = Product::factory()->create([
-                'name' => "Product {$i}"
+                'name' => "Product {$i}",
             ]);
         }
-        
+
         // Act: Get page 1 with 5 items per page
         $responsePage1 = $this->getJson("{$this->productsRoute}?per_page=5&page=1");
-        
+
         // Act: Get page 2 with 5 items per page
         $responsePage2 = $this->getJson("{$this->productsRoute}?per_page=5&page=2");
-        
+
         // Assert: Check that different pages return different items
         $responsePage1->assertStatus(200)
             ->assertJsonCount(5, 'data');
-        
+
         $responsePage2->assertStatus(200)
             ->assertJsonCount(5, 'data');
-        
+
         // Get the product names from both pages
         $namesPage1 = collect($responsePage1->json('data'))->pluck('name')->all();
         $namesPage2 = collect($responsePage2->json('data'))->pluck('name')->all();
-        
+
         // Check that there's no overlap between the two pages
         $this->assertEmpty(array_intersect($namesPage1, $namesPage2));
     });
@@ -208,7 +204,7 @@ describe('Products API', function () {
         // Arrange: Create a product with comments
         $product = Product::factory()->create();
         $comments = Comment::factory()->count(3)->create([
-            'product_id' => $product->id
+            'product_id' => $product->id,
         ]);
 
         // Act: Call the comments endpoint
@@ -223,9 +219,9 @@ describe('Products API', function () {
                         'id',
                         'content',
                         'rating',
-                        'user'
-                    ]
-                ]
+                        'user',
+                    ],
+                ],
             ]);
     });
 
@@ -245,14 +241,14 @@ describe('Products API', function () {
         // Arrange: Create a product with a comment from a specific user
         $product = Product::factory()->create();
         $user = User::factory()->create([
-            'name' => 'Test User'
+            'name' => 'Test User',
         ]);
-        
+
         Comment::factory()->create([
             'product_id' => $product->id,
             'user_id' => $user->id,
             'content' => 'This is a test comment',
-            'rating' => 4
+            'rating' => 4,
         ]);
 
         // Act: Call the comments endpoint
@@ -260,16 +256,13 @@ describe('Products API', function () {
 
         // Assert: Check the user data is included
         $response->assertStatus(200)
-            ->assertJson(fn (AssertableJson $json) =>
-                $json->has('data.0', fn ($json) =>
-                    $json->where('content', 'This is a test comment')
-                         ->where('rating', 4)
-                         ->has('user', fn ($json) =>
-                             $json->where('name', 'Test User')
-                                  ->etc()
-                         )
-                         ->etc()
+            ->assertJson(fn (AssertableJson $json) => $json->has('data.0', fn ($json) => $json->where('content', 'This is a test comment')
+                ->where('rating', 4)
+                ->has('user', fn ($json) => $json->where('name', 'Test User')
+                    ->etc()
                 )
+                ->etc()
+            )
             );
     });
 
@@ -278,12 +271,12 @@ describe('Products API', function () {
         // Arrange: Create a product and authenticate a user
         $product = Product::factory()->create();
         $user = User::factory()->create();
-        
+
         Sanctum::actingAs($user);
 
         $commentData = [
             'content' => 'This is a great product!',
-            'rating' => 5
+            'rating' => 5,
         ];
 
         // Act: Post a new comment
@@ -291,23 +284,23 @@ describe('Products API', function () {
 
         // Assert: Check the comment was created successfully
         $response->assertStatus(201);
-        
+
         // Verify the comment exists in the database
         $this->assertDatabaseHas('comments', [
             'product_id' => $product->id,
             'user_id' => $user->id,
             'content' => 'This is a great product!',
-            'rating' => 5
+            'rating' => 5,
         ]);
-        
+
         // Check the response structure - user may not be included if not loaded
         $response->assertJsonStructure([
             'data' => [
                 'id',
                 'content',
-                'rating'
+                'rating',
                 // 'user' field is optional as it depends on relationship loading
-            ]
+            ],
         ]);
     });
 
@@ -315,13 +308,13 @@ describe('Products API', function () {
         // Arrange: Create a product and authenticate a user
         $product = Product::factory()->create();
         $user = User::factory()->create();
-        
+
         Sanctum::actingAs($user);
 
         // Invalid data: missing content and rating out of range
         $invalidData = [
             'content' => 'Hi', // Too short
-            'rating' => 6 // Out of range (1-5)
+            'rating' => 6, // Out of range (1-5)
         ];
 
         // Act: Try to post an invalid comment
@@ -335,10 +328,10 @@ describe('Products API', function () {
     it('prevents unauthenticated users from creating comments', function () {
         // Arrange: Create a product (no authentication)
         $product = Product::factory()->create();
-        
+
         $commentData = [
             'content' => 'This is a great product!',
-            'rating' => 5
+            'rating' => 5,
         ];
 
         // Act: Try to post a comment without authentication

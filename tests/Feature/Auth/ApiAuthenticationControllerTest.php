@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Laravel\Sanctum\Sanctum;
 
@@ -29,20 +29,18 @@ describe('API Authentication', function () {
             ]);
 
             $response->assertStatus(201)
-                ->assertJson(fn (AssertableJson $json) =>
-                    $json->has('token')
+                ->assertJson(fn (AssertableJson $json) => $json->has('token')
                 );
 
             // Verify the token can be used for authorization
             $token = $response->json('token');
-            $authResponse = $this->withHeader('Authorization', 'Bearer ' . $token)
+            $authResponse = $this->withHeader('Authorization', 'Bearer '.$token)
                 ->getJson($this->userRoute);
 
             $authResponse->assertStatus(200)
-                ->assertJson(fn (AssertableJson $json) =>
-                    $json->where('data.id', $user->id)
-                        ->where('data.email', $user->email)
-                        ->etc()
+                ->assertJson(fn (AssertableJson $json) => $json->where('data.id', $user->id)
+                    ->where('data.email', $user->email)
+                    ->etc()
                 );
         });
 
@@ -81,8 +79,7 @@ describe('API Authentication', function () {
             ]);
 
             $response->assertStatus(201)
-                ->assertJson(fn (AssertableJson $json) =>
-                    $json->has('token')
+                ->assertJson(fn (AssertableJson $json) => $json->has('token')
                 );
 
             $this->assertDatabaseHas('users', [
@@ -94,14 +91,13 @@ describe('API Authentication', function () {
             $token = $response->json('token');
             $user = User::where('email', 'test@example.com')->first();
 
-            $authResponse = $this->withHeader('Authorization', 'Bearer ' . $token)
+            $authResponse = $this->withHeader('Authorization', 'Bearer '.$token)
                 ->getJson($this->userRoute);
 
             $authResponse->assertStatus(200)
-                ->assertJson(fn (AssertableJson $json) =>
-                    $json->where('data.id', $user->id)
-                        ->where('data.email', $user->email)
-                        ->etc()
+                ->assertJson(fn (AssertableJson $json) => $json->where('data.id', $user->id)
+                    ->where('data.email', $user->email)
+                    ->etc()
                 );
         });
 
@@ -163,9 +159,10 @@ describe('API Authentication', function () {
             // Create a mock route that simulates the controller behavior
             Route::post('/test-auth-check', function () {
                 $user = auth()->user();
-                if (!$user) {
+                if (! $user) {
                     return response()->json(['error' => 'Unauthorized'], 401);
                 }
+
                 return response()->json(['success' => true]);
             });
 

@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\ApiAuthenticationController;
 use App\Http\Controllers\ApiNewsController;
 use App\Http\Controllers\ApiOrdersController;
 use App\Http\Controllers\ApiProductsController;
 use App\Http\Controllers\ApiUserController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ApiAuthenticationController;
 
 Route::prefix('/auth')->group(function () {
     Route::post('/login', [ApiAuthenticationController::class, 'login'])->name('login');

@@ -23,7 +23,7 @@ describe('User API', function () {
             'address' => '123 Test St',
             'city' => 'Test City',
         ]);
-        
+
         Sanctum::actingAs($user);
 
         // Act: Call the index endpoint
@@ -31,14 +31,13 @@ describe('User API', function () {
 
         // Assert: Check the response structure and content
         $response->assertStatus(200)
-            ->assertJson(fn (AssertableJson $json) =>
-                $json->where('data.name', 'Test User')
-                     ->where('data.email', 'test@example.com')
-                     ->where('data.zip', '12345')
-                     ->where('data.phone', '123-456-7890')
-                     ->where('data.address', '123 Test St')
-                     ->where('data.city', 'Test City')
-                     ->etc()
+            ->assertJson(fn (AssertableJson $json) => $json->where('data.name', 'Test User')
+                ->where('data.email', 'test@example.com')
+                ->where('data.zip', '12345')
+                ->where('data.phone', '123-456-7890')
+                ->where('data.address', '123 Test St')
+                ->where('data.city', 'Test City')
+                ->etc()
             );
     });
 
@@ -107,7 +106,7 @@ describe('User API', function () {
         $user = User::factory()->create([
             'password' => Hash::make('password123'),
         ]);
-        
+
         Sanctum::actingAs($user);
 
         // Password update data
@@ -136,7 +135,7 @@ describe('User API', function () {
         $user = User::factory()->create([
             'password' => Hash::make('password123'),
         ]);
-        
+
         Sanctum::actingAs($user);
 
         // Incorrect current password
@@ -158,7 +157,7 @@ describe('User API', function () {
         $user = User::factory()->create([
             'password' => Hash::make('password123'),
         ]);
-        
+
         Sanctum::actingAs($user);
 
         // Act: Delete the account
@@ -183,7 +182,7 @@ describe('User API', function () {
         $user = User::factory()->create([
             'password' => Hash::make('password123'),
         ]);
-        
+
         Sanctum::actingAs($user);
 
         // Act: Try to delete with incorrect password

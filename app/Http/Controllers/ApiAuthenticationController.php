@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use Dedoc\Scramble\Attributes\Group;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 
 #[Group('身分認證')]
@@ -30,7 +29,7 @@ class ApiAuthenticationController extends Controller
             /**
              * 用來存入 Authorization 標頭的存取權杖
              */
-            'token' => $token->plainTextToken
+            'token' => $token->plainTextToken,
         ], status: 201);
     }
 
@@ -75,7 +74,7 @@ class ApiAuthenticationController extends Controller
             /**
              * 用來存入 Authorization 標頭的存取權杖
              */
-            'token' => $token->plainTextToken
+            'token' => $token->plainTextToken,
         ], status: 201);
     }
 }

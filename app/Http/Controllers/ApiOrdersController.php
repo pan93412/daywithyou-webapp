@@ -34,7 +34,7 @@ class ApiOrdersController extends Controller
 
     public function store(Request $request)
     {
-        $order = $request->validate([
+        $input = $request->validate([
             'recipient_name' => ['required', 'string'],
             'recipient_email' => ['required', 'email'],
             'recipient_phone' => ['required', 'string', 'min:2'],
@@ -43,18 +43,15 @@ class ApiOrdersController extends Controller
             'recipient_zip_code' => ['required', 'string', 'min:3'],
             'note' => ['nullable', 'string'],
             'payment_method' => ['required', 'string', Rule::in(['cash', 'line_pay', 'bank_transfer'])],
-        ]);
-
-        $orderItems = $request->validate([
             'products' => ['required', 'array', 'min:1'],
             'products.*.product_id' => ['required', Rule::exists('products', 'id')],
             'products.*.quantity' => ['required', 'integer', 'min:1'],
         ]);
 
-        $orderModel = DB::transaction(function () use ($order, $orderItems) {
-            $orderModel = auth()->user()->orders()->create($order);
+        $orderModel = DB::transaction(function () use ($input) {
+            $orderModel = auth()->user()->orders()->create($input);
 
-            foreach ($orderItems['products'] as $orderItem) {
+            foreach ($input['products'] as $orderItem) {
                 $orderModel->orderItems()->create($orderItem);
             }
 

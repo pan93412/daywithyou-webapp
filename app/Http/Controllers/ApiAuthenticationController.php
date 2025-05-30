@@ -20,7 +20,7 @@ class ApiAuthenticationController extends Controller
         if (auth()->attempt($input)) {
             $user = auth()->user();
             $token = $user->createToken($userAgent);
-            
+
             return response()->json([
                 'token' => $token->plainTextToken
             ], status: 201);
@@ -39,7 +39,7 @@ class ApiAuthenticationController extends Controller
         $input = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:8'],
         ]);
 
         $user = User::create($input);

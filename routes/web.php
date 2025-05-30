@@ -13,22 +13,22 @@ Route::post('/newsletter/subscribe', [HomeController::class, 'subscribe'])->name
 
 Route::prefix('/products')->name('products.')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('index');
-    Route::get('/{product:slug}', [ProductController::class, 'show'])->name('show');
-    Route::post('/{product:slug}/new-comment', [ProductController::class, 'storeComment'])
+    Route::get('/{product}', [ProductController::class, 'show'])->name('show');
+    Route::post('/{product}/new-comment', [ProductController::class, 'storeComment'])
         ->name('comment.store')
         ->middleware(['auth', 'verified']);
 });
 
 Route::prefix('/news')->name('news.')->group(function () {
     Route::get('/', [NewsController::class, 'index'])->name('index');
-    Route::get('/{news:slug}', [NewsController::class, 'show'])->name('show');
+    Route::get('/{news}', [NewsController::class, 'show'])->name('show');
 });
 
 Route::prefix('/carts')->name('carts.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');
     Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout')->middleware(['auth', 'verified']);
-    Route::post('/{product:slug}/increment', [CartController::class, 'increment'])->name('increment');
-    Route::delete('/{product:slug}', [CartController::class, 'remove'])->name('remove');
+    Route::post('/{product}/increment', [CartController::class, 'increment'])->name('increment');
+    Route::delete('/{product}', [CartController::class, 'remove'])->name('remove');
     Route::post('/clear', [CartController::class, 'clear'])->name('clear');
 });
 

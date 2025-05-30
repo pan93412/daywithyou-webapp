@@ -43,9 +43,7 @@ describe('Products API', function () {
             ->assertJsonCount(0, 'data');
     });
 
-    // Skip the show test for now as it requires route model binding configuration
-    // that might not be set up correctly
-    it('can retrieve a specific product', function () {
+    it('can retrieve a specific product by slug', function () {
         // Arrange: Create a product
         $product = Product::factory()->create([
             'name' => 'Test Product',
@@ -54,19 +52,22 @@ describe('Products API', function () {
             'price' => 99.99
         ]);
 
-        // Get the product using index route for now
-        $response = $this->getJson($this->productsRoute);
+        // Get the product by slug
+        $response = $this->getJson("{$this->productsRoute}/{$product->slug}");
 
-        // Assert basic structure and that our item exists in the collection
+        // Assert the response structure and content
         $response->assertStatus(200)
-            ->assertJsonPath('data.0.name', $product->name)
-            ->assertJsonPath('data.0.slug', $product->slug)
-            ->assertJsonPath('data.0.price', (string)$product->price); // Cast to string for comparison
+            ->assertJson(fn (AssertableJson $json) =>
+                $json->where('data.name', $product->name)
+                     ->where('data.slug', $product->slug)
+                     ->where('data.price', (string)$product->price) // Cast to string for comparison
+                     ->etc()
+            );
     });
 
-    it('returns 404 when accessing an invalid endpoint', function () {
-        // Act: Call a non-existent endpoint
-        $response = $this->getJson("{$this->productsRoute}/invalid/endpoint");
+    it('returns 404 when accessing a non-existent product', function () {
+        // Act: Call a non-existent product
+        $response = $this->getJson("{$this->productsRoute}/non-existent-slug");
 
         // Assert: Check we get a 404 response
         $response->assertStatus(404);

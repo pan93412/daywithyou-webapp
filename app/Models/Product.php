@@ -19,6 +19,16 @@ class Product extends Model
         'image',
     ];
 
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class, 'product_id');

@@ -42,9 +42,7 @@ describe('News API', function () {
             ->assertJsonCount(0, 'data');
     });
     
-    // Skip the show test for now as it requires route model binding configuration
-    // that might not be set up correctly
-    it('can retrieve a specific news item', function () {
+    it('can retrieve a specific news item by slug', function () {
         // Arrange: Create a news item
         $news = News::factory()->create([
             'title' => 'Test News Item',
@@ -52,18 +50,21 @@ describe('News API', function () {
             'slug' => 'test-news-item'
         ]);
         
-        // Get the news item by ID (using index route for now)
-        $response = $this->getJson($this->newsRoute);
+        // Get the news item by slug
+        $response = $this->getJson("{$this->newsRoute}/{$news->slug}");
         
-        // Assert basic structure and that our item exists in the collection
+        // Assert the response structure and content
         $response->assertStatus(200)
-            ->assertJsonPath('data.0.title', 'Test News Item')
-            ->assertJsonPath('data.0.slug', 'test-news-item');
+            ->assertJson(fn (AssertableJson $json) => 
+                $json->where('data.title', 'Test News Item')
+                     ->where('data.slug', 'test-news-item')
+                     ->etc()
+            );
     });
     
-    it('returns 404 when accessing an invalid endpoint', function () {
-        // Act: Call a non-existent endpoint
-        $response = $this->getJson("{$this->newsRoute}/invalid/endpoint");
+    it('returns 404 when accessing a non-existent news item', function () {
+        // Act: Call a non-existent news item
+        $response = $this->getJson("{$this->newsRoute}/non-existent-slug");
         
         // Assert: Check we get a 404 response
         $response->assertStatus(404);

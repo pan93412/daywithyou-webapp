@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApiNewsController;
+use App\Http\Controllers\ApiOrdersController;
 use App\Http\Controllers\ApiProductsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,7 +20,8 @@ Route::prefix('/auth')->group(function () {
     });
 });
 
-Route::resources([
-    '/news' => ApiNewsController::class,
-    '/products' => ApiProductsController::class
-]);
+Route::resource('/news', ApiNewsController::class)
+    ->only(['index', 'show']);
+
+Route::resource('/products', ApiProductsController::class)
+    ->only(['index', 'show']);

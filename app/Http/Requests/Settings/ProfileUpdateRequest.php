@@ -17,8 +17,14 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            /**
+             * 使用者姓名
+             */
             'name' => ['required', 'string', 'max:255'],
 
+            /**
+             * 使用者信箱
+             */
             'email' => [
                 'required',
                 'string',
@@ -28,9 +34,21 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
 
+            /**
+             * 郵遞區號
+             */
             'zip' => ['string', 'max:255', 'nullable'],
+            /**
+             * 電話
+             */
             'phone' => ['string', 'max:255', 'nullable'],
+            /**
+             * 地址
+             */
             'address' => ['string', 'max:255', 'nullable'],
+            /**
+             * 城市
+             */
             'city' => ['string', 'max:255', 'nullable'],
         ];
     }

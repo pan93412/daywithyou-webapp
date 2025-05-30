@@ -42,11 +42,8 @@ class DashboardController extends Controller
         // Load the order items with their related products
         $order->load('orderItems.product');
 
-        $orderItems = $order->orderItems()->get()->load('product');
-
         return inertia('dashboard/orders/details', [
             'reply' => OrderResource::make($order),
-            'orderItems' => OrderItemResource::collection($orderItems),
         ]);
     }
 }

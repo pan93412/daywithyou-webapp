@@ -93,6 +93,7 @@ export interface Order {
     updated_at: string;
     user_id: number;
     user?: User;
+    order_items: OrderItem[];
 }
 
 export interface OrderIndex {

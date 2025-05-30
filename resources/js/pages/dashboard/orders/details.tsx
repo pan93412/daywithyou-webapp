@@ -4,7 +4,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import AppLayout from '@/layouts/app-layout';
 import { formatDate } from '@/lib/utils';
 import { type BreadcrumbItem } from '@/types';
-import { Data, Order, OrderItem } from '@/types/resource';
+import { Data, Order } from '@/types/resource';
 import { Head, Link, router } from '@inertiajs/react';
 import { Calendar, ChevronLeft, CreditCard, FileText, Mail, MapPin, Package, Phone, Truck, User } from 'lucide-react';
 import { useCallback, useState } from 'react';
@@ -12,7 +12,6 @@ import QRCode from 'react-qr-code';
 
 interface Props {
     reply: Data<Order>;
-    orderItems: Data<OrderItem[]>;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -26,9 +25,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function OrderDetailsPage({ reply, orderItems }: Props) {
+export default function OrderDetailsPage({ reply }: Props) {
+    console.log(reply);
+
     const order = reply.data;
-    const items = orderItems.data;
+    const items = reply.data.order_items;
     const detailUrl = route('dashboard.orders.details', { order: order.id });
 
     return (

@@ -26,6 +26,7 @@ export interface PaginatedData<T> extends Data<T> {
 }
 
 export interface ProductIndex {
+    id: number; // only for API and should not be used
     slug: string;
     name: string;
     summary: string;
@@ -34,6 +35,7 @@ export interface ProductIndex {
 }
 
 export interface Product {
+    id: number; // only for API and should not be used
     slug: string;
     name: string;
     description: string;

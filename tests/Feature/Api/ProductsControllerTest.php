@@ -119,4 +119,84 @@ describe('Products API', function () {
         $figure = $response->json('data.0.figure');
         $this->assertEquals($figure, $product->figure);
     });
+
+    it('paginates the products collection correctly', function () {
+        // Arrange: Create 15 products
+        Product::factory()->count(15)->create();
+        
+        // Act: Call the index endpoint with pagination parameters
+        $response = $this->getJson("{$this->productsRoute}?per_page=5&page=2");
+        
+        // Assert: Check the response structure and pagination
+        $response->assertStatus(200)
+            ->assertJsonCount(5, 'data')
+            ->assertJsonStructure([
+                'data',
+                'links' => ['first', 'last', 'prev', 'next'],
+                'meta' => [
+                    'current_page',
+                    'from',
+                    'last_page',
+                    'links',
+                    'path',
+                    'per_page',
+                    'to',
+                    'total'
+                ]
+            ])
+            ->assertJson(fn (AssertableJson $json) => 
+                $json->where('meta.current_page', 2)
+                     ->where('meta.per_page', 5)
+                     ->where('meta.total', 15)
+                     ->where('meta.last_page', 3)
+                     ->etc()
+            );
+    });
+
+    it('returns the default number of items per page when per_page is not specified', function () {
+        // Arrange: Create 15 products
+        Product::factory()->count(15)->create();
+        
+        // Act: Call the index endpoint without pagination parameters
+        $response = $this->getJson($this->productsRoute);
+        
+        // Assert: Check the default pagination (10 items per page)
+        $response->assertStatus(200)
+            ->assertJsonCount(10, 'data')
+            ->assertJson(fn (AssertableJson $json) => 
+                $json->where('meta.current_page', 1)
+                     ->where('meta.per_page', 10)
+                     ->etc()
+            );
+    });
+
+    it('returns different sets of products on different pages', function () {
+        // Arrange: Create 12 products with unique names
+        $products = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $products[] = Product::factory()->create([
+                'name' => "Product {$i}"
+            ]);
+        }
+        
+        // Act: Get page 1 with 5 items per page
+        $responsePage1 = $this->getJson("{$this->productsRoute}?per_page=5&page=1");
+        
+        // Act: Get page 2 with 5 items per page
+        $responsePage2 = $this->getJson("{$this->productsRoute}?per_page=5&page=2");
+        
+        // Assert: Check that different pages return different items
+        $responsePage1->assertStatus(200)
+            ->assertJsonCount(5, 'data');
+        
+        $responsePage2->assertStatus(200)
+            ->assertJsonCount(5, 'data');
+        
+        // Get the product names from both pages
+        $namesPage1 = collect($responsePage1->json('data'))->pluck('name')->all();
+        $namesPage2 = collect($responsePage2->json('data'))->pluck('name')->all();
+        
+        // Check that there's no overlap between the two pages
+        $this->assertEmpty(array_intersect($namesPage1, $namesPage2));
+    });
 });

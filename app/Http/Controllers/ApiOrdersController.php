@@ -12,12 +12,22 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class ApiOrdersController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // show only the orders of the authenticated user
-        $orders = Order::where('user_id', auth()->user()->id);
+        /**
+         * the number of items per page
+         */
+        $perPage = $request->integer('per_page', 10);
+        /**
+         * the current page
+         */
+        $page = $request->integer('page', 1);
 
-        return OrderIndexResource::collection($orders->get());
+        // show only the orders of the authenticated user
+        $orders = Order::where('user_id', auth()->user()->id)
+            ->paginate($perPage, page: $page);
+
+        return OrderIndexResource::collection($orders);
     }
 
     public function show(Order $order)

@@ -12,11 +12,23 @@ class NewsIndexResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            /**
+             * 最新消息標題
+             */
             'title' => $this->title,
+            /**
+             * 最新消息摘要
+             */
             'summary' => mb_strlen($this->content) > 100
                 ? mb_substr($this->content, 0, 50).'……'
                 : $this->content,
+            /**
+             * 最新消息的唯一 ID (slug)
+             */
             'slug' => $this->slug,
+            /**
+             * 最新消息發佈日期
+             */
             'created_at' => $this->created_at,
         ];
     }

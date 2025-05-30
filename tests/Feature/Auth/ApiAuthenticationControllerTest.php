@@ -13,6 +13,7 @@ describe('API Authentication', function () {
         $this->loginRoute = '/api/auth/login';
         $this->registerRoute = '/api/auth/register';
         $this->logoutRoute = '/api/auth/logout';
+        $this->userRoute = '/api/user';
     });
 
     describe('Login', function () {
@@ -30,6 +31,18 @@ describe('API Authentication', function () {
             $response->assertStatus(201)
                 ->assertJson(fn (AssertableJson $json) => 
                     $json->has('token')
+                );
+            
+            // Verify the token can be used for authorization
+            $token = $response->json('token');
+            $authResponse = $this->withHeader('Authorization', 'Bearer ' . $token)
+                ->getJson($this->userRoute);
+            
+            $authResponse->assertStatus(200)
+                ->assertJson(fn (AssertableJson $json) =>
+                    $json->where('id', $user->id)
+                        ->where('email', $user->email)
+                        ->etc()
                 );
         });
 
@@ -79,6 +92,20 @@ describe('API Authentication', function () {
                 'name' => 'Test User',
                 'email' => 'test@example.com',
             ]);
+            
+            // Verify the token can be used for authorization
+            $token = $response->json('token');
+            $user = User::where('email', 'test@example.com')->first();
+            
+            $authResponse = $this->withHeader('Authorization', 'Bearer ' . $token)
+                ->getJson($this->userRoute);
+            
+            $authResponse->assertStatus(200)
+                ->assertJson(fn (AssertableJson $json) =>
+                    $json->where('id', $user->id)
+                        ->where('email', $user->email)
+                        ->etc()
+                );
         });
 
         it('returns 422 when validation fails', function () {

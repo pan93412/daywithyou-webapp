@@ -19,8 +19,11 @@ class ApiAuthenticationController extends Controller
 
         if (auth()->attempt($input)) {
             $user = auth()->user();
-            $token = $user->createToken($userAgent)->accessToken;
-            return response()->json(['token' => $token], status: 201);
+            $token = $user->createToken($userAgent);
+            
+            return response()->json([
+                'token' => $token->plainTextToken
+            ], status: 201);
         }
 
         throw new AuthenticationException("Bad credentials.");
@@ -40,8 +43,10 @@ class ApiAuthenticationController extends Controller
         ]);
 
         $user = User::create($input);
-        $token = $user->createToken($request->header('User-Agent'))->accessToken;
+        $token = $user->createToken($request->header('User-Agent'));
 
-        return response()->json(['token' => $token], status: 201);
+        return response()->json([
+            'token' => $token->plainTextToken
+        ], status: 201);
     }
 }

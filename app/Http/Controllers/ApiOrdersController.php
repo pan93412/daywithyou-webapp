@@ -60,6 +60,9 @@ class ApiOrdersController extends Controller
      * 建立新訂單
      *
      * 建立一個新的訂單，包含收件人資訊、付款方式及訂購產品。
+     *
+     * 考慮到這是無狀態 API，您需要在用戶端內自行維護購物車 (cart) 狀態，
+     * 並只在使用者送出訂單時呼叫包含這個 API，並只帶上最終訂單內容。
      */
     public function store(Request $request)
     {

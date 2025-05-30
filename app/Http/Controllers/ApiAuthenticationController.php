@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Auth\AuthenticationException;
@@ -15,37 +16,22 @@ class ApiAuthenticationController extends Controller
      *
      * 傳入電子信箱地址和密碼，如果認證成功則會回傳 Bearer 存取權杖。
      *
-     * @throws AuthenticationException 認證失敗
      * @unauthenticated
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $input = $request->validate([
-            /**
-             * 登入帳號的電子信箱
-             */
-            'email' => ['required', 'email'],
-            /**
-             * 登入帳號的密碼
-             */
-            'password' => ['required'],
-        ]);
+        $request->authenticate();
 
         $userAgent = $request->header('User-Agent');
+        $user = auth()->user();
+        $token = $user->createToken($userAgent);
 
-        if (auth()->attempt($input)) {
-            $user = auth()->user();
-            $token = $user->createToken($userAgent);
-
-            return response()->json([
-                /**
-                 * 用來存入 Authorization 標頭的存取權杖
-                 */
-                'token' => $token->plainTextToken
-            ], status: 201);
-        }
-
-        throw new AuthenticationException("Bad credentials.");
+        return response()->json([
+            /**
+             * 用來存入 Authorization 標頭的存取權杖
+             */
+            'token' => $token->plainTextToken
+        ], status: 201);
     }
 
     /**

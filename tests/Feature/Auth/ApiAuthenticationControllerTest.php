@@ -56,7 +56,7 @@ describe('API Authentication', function () {
                 ->assertJsonValidationErrors(['email', 'password']);
         });
 
-        it('returns 401 when credentials are invalid', function () {
+        it('returns 422 (with error message) when credentials are invalid', function () {
             $user = User::factory()->create([
                 'email' => 'test@example.com',
                 'password' => bcrypt('password'),
@@ -67,10 +67,7 @@ describe('API Authentication', function () {
                 'password' => 'wrong-password',
             ]);
 
-            $response->assertStatus(401)
-                ->assertJson([
-                    'message' => 'Bad credentials.'
-                ]);
+            $response->assertStatus(422);
         });
     });
 

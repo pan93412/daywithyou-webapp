@@ -11,6 +11,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+
 Route::prefix('/auth')->group(function () {
     Route::post('/login', [ApiAuthenticationController::class, 'login'])->name('login');
     Route::post('/register', [ApiAuthenticationController::class, 'register'])->name('register');

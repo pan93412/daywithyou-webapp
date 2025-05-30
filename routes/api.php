@@ -25,3 +25,6 @@ Route::resource('/news', ApiNewsController::class)
 
 Route::resource('/products', ApiProductsController::class)
     ->only(['index', 'show']);
+
+Route::resource('/orders', ApiOrdersController::class)
+    ->middleware('auth:sanctum');

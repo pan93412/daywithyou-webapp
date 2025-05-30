@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ApiNewsController;
+use App\Http\Controllers\ApiProductsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiAuthenticationController;
@@ -15,4 +17,9 @@ Route::prefix('/auth')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [ApiAuthenticationController::class, 'logout'])->name('logout');
     });
-})->name('api.auth.');
+});
+
+Route::resources([
+    '/news' => ApiNewsController::class,
+    '/products' => ApiProductsController::class
+]);

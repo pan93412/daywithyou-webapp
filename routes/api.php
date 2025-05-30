@@ -27,4 +27,5 @@ Route::resource('/products', ApiProductsController::class)
     ->only(['index', 'show']);
 
 Route::resource('/orders', ApiOrdersController::class)
+    ->only(['index', 'show', 'store', 'destroy'])
     ->middleware('auth:sanctum');

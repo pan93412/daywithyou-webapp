@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CommentResource;
 use App\Http\Resources\ProductIndexResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Dedoc\Scramble\Attributes\Group;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 
 #[Group('產品目錄')]
@@ -44,5 +46,46 @@ class ApiProductsController extends Controller
     public function show(Product $product)
     {
         return ProductResource::make($product);
+    }
+
+    /**
+     * 列出這個產品的評價
+     *
+     * @unauthenticated
+     */
+    public function comments(Product $product)
+    {
+        $comments = $product->comments()->get();
+        $comments->load('user');
+
+        return CommentResource::collection($comments);
+    }
+
+    /**
+     * 建立這個產品的評論
+     */
+    public function storeComment(Request $request, Product $product)
+    {
+        $input = $request->validate([
+            /**
+             * 評論內容
+             */
+            'content' => ['required', 'string', 'min:5', 'max:512'],
+            /**
+             * 評論星數
+             */
+            'rating' => ['required', 'numeric', 'min:1', 'max:5'],
+        ]);
+
+        if (! $request->user()) {
+            throw new AuthenticationException('Unauthenticated.');
+        }
+
+        $comment = $product->comments()->create([
+            ...$input,
+            'user_id' => $request->user()->id,
+        ]);
+
+        return CommentResource::make($comment);
     }
 }

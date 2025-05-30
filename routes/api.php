@@ -26,6 +26,9 @@ Route::resource('/news', ApiNewsController::class)
 
 Route::resource('/products', ApiProductsController::class)
     ->only(['index', 'show']);
+Route::get('/products/{product}/comments', [ApiProductsController::class, 'comments']);
+Route::post('/products/{product}/comments', [ApiProductsController::class, 'storeComment'])
+    ->middleware('auth:sanctum');
 
 Route::resource('/orders', ApiOrdersController::class)
     ->only(['index', 'show', 'store', 'destroy'])

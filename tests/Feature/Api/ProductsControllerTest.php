@@ -1,8 +1,11 @@
 <?php
 
 use App\Models\Product;
+use App\Models\Comment;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
+use Laravel\Sanctum\Sanctum;
 
 uses(RefreshDatabase::class);
 
@@ -198,5 +201,150 @@ describe('Products API', function () {
         
         // Check that there's no overlap between the two pages
         $this->assertEmpty(array_intersect($namesPage1, $namesPage2));
+    });
+
+    // New tests for comments endpoint
+    it('returns a collection of comments for a product', function () {
+        // Arrange: Create a product with comments
+        $product = Product::factory()->create();
+        $comments = Comment::factory()->count(3)->create([
+            'product_id' => $product->id
+        ]);
+
+        // Act: Call the comments endpoint
+        $response = $this->getJson("{$this->productsRoute}/{$product->slug}/comments");
+
+        // Assert: Check the response structure and status
+        $response->assertStatus(200)
+            ->assertJsonCount(3, 'data')
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'content',
+                        'rating',
+                        'user'
+                    ]
+                ]
+            ]);
+    });
+
+    it('returns an empty collection when a product has no comments', function () {
+        // Arrange: Create a product with no comments
+        $product = Product::factory()->create();
+
+        // Act: Call the comments endpoint
+        $response = $this->getJson("{$this->productsRoute}/{$product->slug}/comments");
+
+        // Assert: Check we get an empty data array
+        $response->assertStatus(200)
+            ->assertJsonCount(0, 'data');
+    });
+
+    it('includes user information with each comment', function () {
+        // Arrange: Create a product with a comment from a specific user
+        $product = Product::factory()->create();
+        $user = User::factory()->create([
+            'name' => 'Test User'
+        ]);
+        
+        Comment::factory()->create([
+            'product_id' => $product->id,
+            'user_id' => $user->id,
+            'content' => 'This is a test comment',
+            'rating' => 4
+        ]);
+
+        // Act: Call the comments endpoint
+        $response = $this->getJson("{$this->productsRoute}/{$product->slug}/comments");
+
+        // Assert: Check the user data is included
+        $response->assertStatus(200)
+            ->assertJson(fn (AssertableJson $json) =>
+                $json->has('data.0', fn ($json) =>
+                    $json->where('content', 'This is a test comment')
+                         ->where('rating', 4)
+                         ->has('user', fn ($json) =>
+                             $json->where('name', 'Test User')
+                                  ->etc()
+                         )
+                         ->etc()
+                )
+            );
+    });
+
+    // Tests for storeComment endpoint
+    it('allows authenticated users to create comments', function () {
+        // Arrange: Create a product and authenticate a user
+        $product = Product::factory()->create();
+        $user = User::factory()->create();
+        
+        Sanctum::actingAs($user);
+
+        $commentData = [
+            'content' => 'This is a great product!',
+            'rating' => 5
+        ];
+
+        // Act: Post a new comment
+        $response = $this->postJson("{$this->productsRoute}/{$product->slug}/comments", $commentData);
+
+        // Assert: Check the comment was created successfully
+        $response->assertStatus(201);
+        
+        // Verify the comment exists in the database
+        $this->assertDatabaseHas('comments', [
+            'product_id' => $product->id,
+            'user_id' => $user->id,
+            'content' => 'This is a great product!',
+            'rating' => 5
+        ]);
+        
+        // Check the response structure - user may not be included if not loaded
+        $response->assertJsonStructure([
+            'data' => [
+                'id',
+                'content',
+                'rating'
+                // 'user' field is optional as it depends on relationship loading
+            ]
+        ]);
+    });
+
+    it('validates comment data', function () {
+        // Arrange: Create a product and authenticate a user
+        $product = Product::factory()->create();
+        $user = User::factory()->create();
+        
+        Sanctum::actingAs($user);
+
+        // Invalid data: missing content and rating out of range
+        $invalidData = [
+            'content' => 'Hi', // Too short
+            'rating' => 6 // Out of range (1-5)
+        ];
+
+        // Act: Try to post an invalid comment
+        $response = $this->postJson("{$this->productsRoute}/{$product->slug}/comments", $invalidData);
+
+        // Assert: Check validation errors
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['content', 'rating']);
+    });
+
+    it('prevents unauthenticated users from creating comments', function () {
+        // Arrange: Create a product (no authentication)
+        $product = Product::factory()->create();
+        
+        $commentData = [
+            'content' => 'This is a great product!',
+            'rating' => 5
+        ];
+
+        // Act: Try to post a comment without authentication
+        $response = $this->postJson("{$this->productsRoute}/{$product->slug}/comments", $commentData);
+
+        // Assert: Check authentication is required
+        $response->assertStatus(401);
     });
 });

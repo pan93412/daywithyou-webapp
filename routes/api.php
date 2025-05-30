@@ -3,14 +3,9 @@
 use App\Http\Controllers\ApiNewsController;
 use App\Http\Controllers\ApiOrdersController;
 use App\Http\Controllers\ApiProductsController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\ApiUserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiAuthenticationController;
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
 
 Route::prefix('/auth')->group(function () {
     Route::post('/login', [ApiAuthenticationController::class, 'login'])->name('login');
@@ -19,6 +14,13 @@ Route::prefix('/auth')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [ApiAuthenticationController::class, 'logout'])->name('logout');
     });
+});
+
+Route::prefix('/me')->middleware('auth:sanctum')->group(function () {
+    Route::get('/', [ApiUserController::class, 'index']);
+    Route::put('/', [ApiUserController::class, 'update']);
+    Route::put('/password', [ApiUserController::class, 'updatePassword']);
+    Route::delete('/', [ApiUserController::class, 'destroy']);
 });
 
 Route::resource('/news', ApiNewsController::class)

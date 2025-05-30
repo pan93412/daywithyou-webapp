@@ -12,6 +12,7 @@ class ProductIndexResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id, // for adding to cart
             'slug' => $this->slug,
             'name' => $this->name,
             'summary' => mb_strlen($this->description) > 100

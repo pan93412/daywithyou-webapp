@@ -13,7 +13,7 @@ describe('API Authentication', function () {
         $this->loginRoute = '/api/auth/login';
         $this->registerRoute = '/api/auth/register';
         $this->logoutRoute = '/api/auth/logout';
-        $this->userRoute = '/api/user';
+        $this->userRoute = '/api/me';
     });
 
     describe('Login', function () {
@@ -29,19 +29,19 @@ describe('API Authentication', function () {
             ]);
 
             $response->assertStatus(201)
-                ->assertJson(fn (AssertableJson $json) => 
+                ->assertJson(fn (AssertableJson $json) =>
                     $json->has('token')
                 );
-            
+
             // Verify the token can be used for authorization
             $token = $response->json('token');
             $authResponse = $this->withHeader('Authorization', 'Bearer ' . $token)
                 ->getJson($this->userRoute);
-            
+
             $authResponse->assertStatus(200)
                 ->assertJson(fn (AssertableJson $json) =>
-                    $json->where('id', $user->id)
-                        ->where('email', $user->email)
+                    $json->where('data.id', $user->id)
+                        ->where('data.email', $user->email)
                         ->etc()
                 );
         });
@@ -84,7 +84,7 @@ describe('API Authentication', function () {
             ]);
 
             $response->assertStatus(201)
-                ->assertJson(fn (AssertableJson $json) => 
+                ->assertJson(fn (AssertableJson $json) =>
                     $json->has('token')
                 );
 
@@ -92,18 +92,18 @@ describe('API Authentication', function () {
                 'name' => 'Test User',
                 'email' => 'test@example.com',
             ]);
-            
+
             // Verify the token can be used for authorization
             $token = $response->json('token');
             $user = User::where('email', 'test@example.com')->first();
-            
+
             $authResponse = $this->withHeader('Authorization', 'Bearer ' . $token)
                 ->getJson($this->userRoute);
-            
+
             $authResponse->assertStatus(200)
                 ->assertJson(fn (AssertableJson $json) =>
-                    $json->where('id', $user->id)
-                        ->where('email', $user->email)
+                    $json->where('data.id', $user->id)
+                        ->where('data.email', $user->email)
                         ->etc()
                 );
         });
@@ -143,26 +143,26 @@ describe('API Authentication', function () {
 
         it('successfully logs out an authenticated user', function () {
             $user = User::factory()->create();
-            
+
             // Authenticate the user with Sanctum
             Sanctum::actingAs($user);
-            
+
             // Verify we can access a protected route
-            $this->getJson('/api/user')->assertStatus(200);
-            
+            $this->getJson($this->userRoute)->assertStatus(200);
+
             // Perform logout
             $response = $this->postJson($this->logoutRoute);
             $response->assertStatus(200);
-            
+
             // Check that the token count has decreased
             $this->assertCount(0, $user->tokens);
         });
-        
+
         it('properly handles the auth()->user() check', function () {
             // This test specifically targets the auth()->user() check in the controller
             // We're testing the code path without using middleware to simulate what happens
             // when the auth()->user() check fails
-            
+
             // Create a mock route that simulates the controller behavior
             Route::post('/test-auth-check', function () {
                 $user = auth()->user();
@@ -171,11 +171,11 @@ describe('API Authentication', function () {
                 }
                 return response()->json(['success' => true]);
             });
-            
+
             // Test without authentication
             $response = $this->postJson('/test-auth-check');
             $response->assertStatus(401);
-            
+
             // Test with authentication
             Sanctum::actingAs(User::factory()->create());
             $this->postJson('/test-auth-check')->assertStatus(200);

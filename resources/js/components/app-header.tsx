@@ -32,11 +32,9 @@ export interface AppHeaderProps {
 
 export function AppHeader({ title }: AppHeaderProps) {
     const {
-        props: { auth, cart },
+        props: { auth, cartCount },
     } = usePage<SharedData>();
     const formRef = useRef<HTMLFormElement | null>(null);
-
-    const cartCount = Object.keys(cart).length;
 
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">

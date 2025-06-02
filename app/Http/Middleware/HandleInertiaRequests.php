@@ -78,7 +78,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'message' => $messageSession?->toArray(),
-            'cart' => $cart,
+            'cartCount' => count($cart),
             'ziggy' => fn (): array => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
